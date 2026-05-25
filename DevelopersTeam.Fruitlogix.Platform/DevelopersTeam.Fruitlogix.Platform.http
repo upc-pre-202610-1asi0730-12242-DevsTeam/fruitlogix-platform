@@ -1,0 +1,6 @@
+@DevelopersTeam.Fruitlogix.Platform_HostAddress = http://localhost:5078
+
+GET {{DevelopersTeam.Fruitlogix.Platform_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
