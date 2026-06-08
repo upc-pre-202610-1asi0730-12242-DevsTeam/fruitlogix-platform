@@ -5,6 +5,7 @@ using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.C
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
