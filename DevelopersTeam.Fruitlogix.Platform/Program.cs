@@ -10,7 +10,7 @@ using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.R
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);   
 
 // ── Database ──────────────────────────────────────────────────────────────────
 builder.Services.AddDbContext<AppDbContext>(options =>
