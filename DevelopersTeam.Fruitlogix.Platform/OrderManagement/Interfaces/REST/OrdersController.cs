@@ -20,9 +20,7 @@ public class OrdersController(
     {
         var command = CreateOrderCommandFromResourceAssembler.ToCommandFromResource(resource);
         var order = await orderCommandService.Handle(command);
-        
         if (order is null) return BadRequest();
-        
         var orderResource = OrderResourceFromEntityAssembler.ToResourceFromEntity(order);
         return StatusCode(201, orderResource);
     }
@@ -32,6 +30,25 @@ public class OrdersController(
     public async Task<IActionResult> GetAll()
     {
         var orders = await orderQueryService.Handle(new GetAllOrdersQuery());
+        var resources = orders.Select(OrderResourceFromEntityAssembler.ToResourceFromEntity);
+        return Ok(resources);
+    }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var order = await orderQueryService.Handle(new GetOrderByIdQuery(id));
+        if (order is null) return NotFound();
+        return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
+
+    [HttpGet("client/{clientId:int}")]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> GetByClientId(int clientId)
+    {
+        var orders = await orderQueryService.Handle(new GetOrdersByClientIdQuery(clientId));
         var resources = orders.Select(OrderResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
