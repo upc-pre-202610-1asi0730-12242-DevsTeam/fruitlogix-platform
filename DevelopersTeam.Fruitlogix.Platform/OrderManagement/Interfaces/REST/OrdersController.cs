@@ -52,4 +52,37 @@ public class OrdersController(
         var resources = orders.Select(OrderResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateOrderResource resource)
+    {
+        var command = UpdateOrderCommandFromResourceAssembler.ToCommandFromResource(id, resource);
+        var order = await orderCommandService.Handle(command);
+        if (order is null) return NotFound();
+        return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
+
+    [HttpPatch("{id:int}/assign-producer")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> AssignProducer(int id, [FromBody] AssignProducerResource resource)
+    {
+        var command = AssignProducerCommandFromResourceAssembler.ToCommandFromResource(id, resource);
+        var order = await orderCommandService.Handle(command);
+        if (order is null) return NotFound();
+        return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
+
+    [HttpPatch("{id:int}/cancel")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> Cancel(int id, [FromBody] CancelOrderResource resource)
+    {
+        var command = new Domain.Model.Commands.CancelOrderCommand(id, resource.Reason);
+        var order = await orderCommandService.Handle(command);
+        if (order is null) return NotFound();
+        return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
 }
