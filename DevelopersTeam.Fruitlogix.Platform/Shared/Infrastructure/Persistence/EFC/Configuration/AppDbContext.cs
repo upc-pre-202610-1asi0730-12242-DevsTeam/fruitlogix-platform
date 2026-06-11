@@ -74,19 +74,30 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<OrderItem>().Ignore(i => i.Subtotal);
         
         //Profiles
+
         builder.Entity<Producer>().HasKey(p => p.Id);
         builder.Entity<Producer>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
 
         builder.Entity<Producer>().Property(p => p.ProducerType)
             .HasConversion<string>().IsRequired();
 
+        builder.Entity<Producer>().Property(p => p.FullName).IsRequired();
+        builder.Entity<Producer>().Property(p => p.LegalName).IsRequired();
+        builder.Entity<Producer>().Property(p => p.Rating).IsRequired();
+        builder.Entity<Producer>().Property(p => p.Certifications);
+        builder.Entity<Producer>().Property(p => p.Photo);
+
         builder.Entity<Producer>().OwnsOne(p => p.TaxId, vo =>
-            vo.Property(t => t.Value).HasColumnName("tax_id").IsRequired());
+        {
+            vo.Property(t => t.Value).HasColumnName("tax_id").IsRequired();
+            vo.WithOwner().HasForeignKey("Id");
+        });
 
         builder.Entity<Producer>().OwnsOne(p => p.ContactInfo, vo =>
         {
             vo.Property(c => c.Email).HasColumnName("email").IsRequired();
             vo.Property(c => c.Phone).HasColumnName("phone").IsRequired();
+            vo.WithOwner().HasForeignKey("Id");
         });
 
         builder.Entity<Producer>().OwnsOne(p => p.Location, vo =>
@@ -95,6 +106,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             vo.Property(l => l.Region).HasColumnName("region");
             vo.Property(l => l.City).HasColumnName("city");
             vo.Property(l => l.Address).HasColumnName("address");
+            vo.WithOwner().HasForeignKey("Id");
         });
 
         builder.Entity<Producer>().OwnsOne(p => p.ProductionInfo, vo =>
@@ -102,13 +114,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             vo.Property(pi => pi.Crop).HasColumnName("crop").IsRequired();
             vo.Property(pi => pi.CultivatedHectares).HasColumnName("cultivated_hectares");
             vo.Property(pi => pi.MonthlyProduction).HasColumnName("monthly_production");
+            vo.WithOwner().HasForeignKey("Id");
         });
-
-        builder.Entity<Producer>().Property(p => p.FullName).IsRequired();
-        builder.Entity<Producer>().Property(p => p.LegalName).IsRequired();
-        builder.Entity<Producer>().Property(p => p.Rating).IsRequired();
-        builder.Entity<Producer>().Property(p => p.Certifications);
-        builder.Entity<Producer>().Property(p => p.Photo);
 
         builder.UseSnakeCaseNamingConvention();
     }
