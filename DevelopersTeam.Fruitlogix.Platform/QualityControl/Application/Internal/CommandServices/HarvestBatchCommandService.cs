@@ -25,4 +25,16 @@ public class HarvestBatchCommandService(
 
         return batch;
     }
+
+    public async Task<HarvestBatch?> Handle(UpdateHarvestBatchStatusCommand command)
+    {
+        var batch = await harvestBatchRepository.FindByIdAsync(command.BatchId);
+        if (batch is null) return null;
+
+        batch.UpdateStatus(command.NewStatus);
+        harvestBatchRepository.Update(batch);
+        await unitOfWork.CompleteAsync();
+
+        return batch;
+    }
 }
