@@ -1,3 +1,7 @@
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.Internal.CommandServices;
@@ -56,6 +60,10 @@ builder.Services.AddScoped<IQualityInspectionQueryService, QualityInspectionQuer
 builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
 builder.Services.AddScoped<IIncidentCommandService, IncidentCommandService>();
 builder.Services.AddScoped<IIncidentQueryService, IncidentQueryService>();
+
+// Logistics
+builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
+builder.Services.AddScoped<IDeliveryCommandService, DeliveryCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

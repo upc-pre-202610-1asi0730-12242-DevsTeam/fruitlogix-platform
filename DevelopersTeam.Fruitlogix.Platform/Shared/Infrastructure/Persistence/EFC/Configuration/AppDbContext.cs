@@ -1,3 +1,4 @@
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
@@ -191,6 +192,35 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .IsRequired();
 
             entity.Property(i => i.ResolvedAt);
+        });
+        // Delivery
+        builder.Entity<Delivery>().HasKey(d => d.Id);
+        builder.Entity<Delivery>().Property(d => d.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Delivery>().Property(d => d.OrderId).IsRequired();
+        builder.Entity<Delivery>().Property(d => d.EstimatedTimeOfArrival).IsRequired();
+        builder.Entity<Delivery>().Property(d => d.CurrentStatus)
+            .HasConversion<string>().IsRequired();
+
+// Value Object: DriverInfo (owned entity → columnas aplanadas)
+        builder.Entity<Delivery>().OwnsOne(d => d.Driver, nav =>
+        {
+            nav.Property(x => x.Name).HasColumnName("driver_name").IsRequired();
+            nav.Property(x => x.Phone).HasColumnName("driver_phone");
+        });
+
+// Value Object: VehicleInfo
+        builder.Entity<Delivery>().OwnsOne(d => d.Vehicle, nav =>
+        {
+            nav.Property(x => x.Plate).HasColumnName("vehicle_plate").IsRequired();
+            nav.Property(x => x.Type).HasColumnName("vehicle_type");
+        });
+
+// Value Object: RouteInfo
+        builder.Entity<Delivery>().OwnsOne(d => d.Route, nav =>
+        {
+            nav.Property(x => x.Origin).HasColumnName("route_origin").IsRequired();
+            nav.Property(x => x.Destination).HasColumnName("route_destination").IsRequired();
+            nav.Property(x => x.DistanceKm).HasColumnName("route_distance_km").IsRequired();
         });
         
         builder.UseSnakeCaseNamingConvention();
