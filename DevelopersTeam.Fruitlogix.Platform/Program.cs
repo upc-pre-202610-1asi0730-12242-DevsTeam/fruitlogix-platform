@@ -49,6 +49,10 @@ builder.Services.AddScoped<IHarvestBatchRepository, HarvestBatchRepository>();
 builder.Services.AddScoped<IHarvestBatchCommandService, HarvestBatchCommandService>();
 builder.Services.AddScoped<IHarvestBatchQueryService, HarvestBatchQueryService>();
 
+builder.Services.AddScoped<IQualityInspectionRepository, QualityInspectionRepository>();
+builder.Services.AddScoped<IQualityInspectionCommandService, QualityInspectionCommandService>();
+
+
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
     options.Conventions.Add(new KebabCaseRouteNamingConvention()));
