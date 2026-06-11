@@ -39,4 +39,13 @@ public class ProducerCommandService(
         await unitOfWork.CompleteAsync();
         return producer;
     }
+    
+    public async Task Handle(DeleteProducerCommand command)
+    {
+        var producer = await producerRepository.FindByIdAsync(command.Id)
+                       ?? throw new KeyNotFoundException($"Producer with id {command.Id} not found.");
+
+        producerRepository.Remove(producer);
+        await unitOfWork.CompleteAsync();
+    }
 }
