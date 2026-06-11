@@ -3,6 +3,8 @@ using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Model.ValueObjects;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Interceptors;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
@@ -249,6 +251,28 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Alert>().Property(a => a.Severity).HasConversion<string>().IsRequired();
         builder.Entity<Alert>().Property(a => a.Message).IsRequired();
         builder.Entity<Alert>().Property(a => a.IsResolved).IsRequired();
+        
+        builder.Entity<Invoice>().HasKey(i => i.Id);
+        builder.Entity<Invoice>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Invoice>().Property(i => i.ClientId).IsRequired();
+        builder.Entity<Invoice>().Property(i => i.OrderId).IsRequired(false);
+
+        builder.Entity<Invoice>().OwnsOne(i => i.TotalAmount, money =>
+        {
+            money.WithOwner().HasForeignKey("Id");
+            money.Property(m => m.Amount).HasColumnName("total_amount").IsRequired();
+            money.Property(m => m.Currency).HasColumnName("currency").HasMaxLength(3).IsRequired();
+        });
+
+        builder.Entity<Invoice>()
+            .Property(i => i.DueDate)
+            .HasConversion(v => v.Value, v => new DueDate(v))
+            .IsRequired();
+
+        builder.Entity<Invoice>().Property(i => i.Status).HasConversion<string>().IsRequired();
+        builder.Entity<Invoice>().Property(i => i.InvoiceType).HasConversion<string>().IsRequired();
+        builder.Entity<Invoice>().Property(i => i.IssuedAt).IsRequired(false);
+        builder.Entity<Invoice>().Property(i => i.PaidAt).IsRequired(false);
         
         builder.UseSnakeCaseNamingConvention();
     }

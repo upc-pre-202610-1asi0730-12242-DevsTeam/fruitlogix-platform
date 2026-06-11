@@ -10,6 +10,10 @@ using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.Internal.Co
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.Internal.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Infrastructure.Persistence.EFC.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -73,6 +77,10 @@ builder.Services.AddScoped<ITrackingLogQueryService, TrackingLogQueryService>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
+
+// ── Payment ───────────────────────────────────────────────────────────────
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceCommandService, InvoiceCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
