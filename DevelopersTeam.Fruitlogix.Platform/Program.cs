@@ -51,6 +51,8 @@ builder.Services.AddScoped<IHarvestBatchQueryService, HarvestBatchQueryService>(
 
 builder.Services.AddScoped<IQualityInspectionRepository, QualityInspectionRepository>();
 builder.Services.AddScoped<IQualityInspectionCommandService, QualityInspectionCommandService>();
+builder.Services.AddScoped<IQualityInspectionQueryService, QualityInspectionQueryService>();
+
 
 
 // ── Controllers ───────────────────────────────────────────────────────────────
