@@ -12,4 +12,7 @@ public class ProducerRepository(AppDbContext context)
     public async Task<bool> ExistsByTaxIdAsync(string taxId) =>
         await Context.Set<Producer>()
             .AnyAsync(p => p.TaxId.Value == taxId);
+    public async Task<Producer?> FindByTaxIdAsync(string taxId) =>
+        await Context.Set<Producer>()
+            .FirstOrDefaultAsync(p => p.TaxId.Value == taxId);
 }
