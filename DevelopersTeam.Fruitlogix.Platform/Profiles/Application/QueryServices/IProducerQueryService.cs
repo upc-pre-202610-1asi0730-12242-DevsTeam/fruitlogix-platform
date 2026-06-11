@@ -6,4 +6,7 @@ namespace DevelopersTeam.Fruitlogix.Platform.Profiles.Application.QueryServices;
 public interface IProducerQueryService
 {
     Task<IEnumerable<Producer>> Handle(GetAllProducersQuery query);
+    
+    Task<Producer?> Handle(GetProducerByIdQuery query);
+
 }
