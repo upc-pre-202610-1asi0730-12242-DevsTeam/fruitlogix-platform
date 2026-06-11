@@ -3,11 +3,11 @@ using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Interceptors;
-// Agregar en AppDbContext.cs — sección usings de Profiles
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
-
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Entities;
 
 namespace DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -131,6 +131,49 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .HasConversion<string>() // guarda "Pending", "Approved", etc.
                 .IsRequired();
         }); 
+        
+        builder.Entity<QualityInspection>(entity =>
+        {
+            entity.HasKey(q => q.Id);
+            entity.Property(q => q.Notes).HasMaxLength(500);
+
+            entity.HasOne(q => q.VisualInspection)
+                .WithOne()
+                .HasForeignKey<VisualInspection>(v => v.QualityInspectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(q => q.TechnicalParameters)
+                .WithOne()
+                .HasForeignKey<TechnicalParameters>(t => t.QualityInspectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(q => q.PreparationChecklist)
+                .WithOne()
+                .HasForeignKey<PreparationChecklist>(c => c.QualityInspectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<VisualInspection>(entity =>
+        {
+            entity.HasKey(v => v.Id);
+            entity.Property(v => v.WastePercentage).IsRequired();
+            entity.Property(v => v.AppearanceRating).IsRequired();
+        });
+
+        builder.Entity<TechnicalParameters>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.TemperatureCelsius).IsRequired();
+            entity.Property(t => t.HumidityPercent).IsRequired();
+            entity.Property(t => t.Ph).IsRequired();
+            entity.Property(t => t.BrixDegrees).IsRequired();
+        });
+
+        builder.Entity<PreparationChecklist>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+        });
+        
         
         builder.UseSnakeCaseNamingConvention();
     }
