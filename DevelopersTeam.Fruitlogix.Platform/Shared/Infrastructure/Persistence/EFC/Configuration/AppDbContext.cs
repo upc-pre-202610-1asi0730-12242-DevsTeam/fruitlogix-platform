@@ -201,11 +201,12 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Delivery>().Property(d => d.CurrentStatus)
             .HasConversion<string>().IsRequired();
 
-// Value Object: DriverInfo (owned entity → columnas aplanadas)
+// Value Object: DriverInfo
         builder.Entity<Delivery>().OwnsOne(d => d.Driver, nav =>
         {
             nav.Property(x => x.Name).HasColumnName("driver_name").IsRequired();
             nav.Property(x => x.Phone).HasColumnName("driver_phone");
+            nav.WithOwner().HasForeignKey("Id"); 
         });
 
 // Value Object: VehicleInfo
@@ -213,6 +214,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         {
             nav.Property(x => x.Plate).HasColumnName("vehicle_plate").IsRequired();
             nav.Property(x => x.Type).HasColumnName("vehicle_type");
+            nav.WithOwner().HasForeignKey("Id"); 
         });
 
 // Value Object: RouteInfo
@@ -221,6 +223,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             nav.Property(x => x.Origin).HasColumnName("route_origin").IsRequired();
             nav.Property(x => x.Destination).HasColumnName("route_destination").IsRequired();
             nav.Property(x => x.DistanceKm).HasColumnName("route_distance_km").IsRequired();
+            nav.WithOwner().HasForeignKey("Id"); 
         });
         
         builder.UseSnakeCaseNamingConvention();
