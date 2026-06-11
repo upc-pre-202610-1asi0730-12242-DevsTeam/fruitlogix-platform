@@ -140,17 +140,20 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasOne(q => q.VisualInspection)
                 .WithOne()
                 .HasForeignKey<VisualInspection>(v => v.QualityInspectionId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_quality_inspections_visual"); // Nombre corto y seguro
 
             entity.HasOne(q => q.TechnicalParameters)
                 .WithOne()
                 .HasForeignKey<TechnicalParameters>(t => t.QualityInspectionId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_quality_inspections_technical"); // Nombre corto y seguro
+    
             entity.HasOne(q => q.PreparationChecklist)
                 .WithOne()
                 .HasForeignKey<PreparationChecklist>(c => c.QualityInspectionId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_quality_inspections_preparation"); // Nombre corto y seguro
         });
 
         builder.Entity<VisualInspection>(entity =>
