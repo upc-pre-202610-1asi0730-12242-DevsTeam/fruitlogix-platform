@@ -33,4 +33,26 @@ public class IncidentsController(
         var result   = IncidentResourceAssembler.ToResourceFromEntity(incident);
         return CreatedAtAction(nameof(CreateIncident), new { id = result.Id }, result);
     }
+    
+    [HttpPatch("{id:int}/status")]
+    public async Task<IActionResult> UpdateIncidentStatus(
+        int id, [FromBody] UpdateIncidentStatusResource resource)
+    {
+        try
+        {
+            var command  = IncidentResourceAssembler.ToCommandFromResource(id, resource);
+            var incident = await commandService.Handle(command);
+
+            if (incident is null)
+                return NotFound($"Incident with id {id} not found.");
+
+            return Ok(IncidentResourceAssembler.ToResourceFromEntity(incident));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    
 }

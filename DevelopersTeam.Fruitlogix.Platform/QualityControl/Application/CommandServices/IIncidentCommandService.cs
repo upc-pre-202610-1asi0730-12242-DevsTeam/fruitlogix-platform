@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.CommandS
 public interface IIncidentCommandService
 {
     Task<Incident> Handle(CreateIncidentCommand command);
+    Task<Incident?> Handle(UpdateIncidentStatusCommand command);  // ← nuevo
 }
