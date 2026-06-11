@@ -9,4 +9,7 @@ public class ProducerQueryService(IProducerRepository producerRepository) : IPro
 {
     public async Task<IEnumerable<Producer>> Handle(GetAllProducersQuery query) =>
         await producerRepository.ListAsync();
+    
+    public async Task<Producer?> Handle(GetProducerByIdQuery query) =>
+        await producerRepository.FindByIdAsync(query.Id);
 }

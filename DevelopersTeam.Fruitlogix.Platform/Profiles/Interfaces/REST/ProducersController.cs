@@ -35,4 +35,13 @@ public class ProducersController(
         var result    = producers.Select(ProducerResourceAssembler.ToResourceFromEntity);
         return Ok(result);
     }
+    
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetProducerById(int id)
+    {
+        var query    = new GetProducerByIdQuery(id);
+        var producer = await producerQueryService.Handle(query);
+        if (producer is null) return NotFound(new { message = $"Producer with id {id} not found." });
+        return Ok(ProducerResourceAssembler.ToResourceFromEntity(producer));
+    }
 }
