@@ -12,6 +12,8 @@ using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.Internal.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Domain.Repositories;
@@ -81,6 +83,7 @@ builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 // ── Payment ───────────────────────────────────────────────────────────────
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceCommandService, InvoiceCommandService>();
+builder.Services.AddScoped<IInvoiceQueryService, InvoiceQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
