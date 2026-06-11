@@ -26,4 +26,24 @@ public class DeliveryCommandService : IDeliveryCommandService
         await _unitOfWork.CompleteAsync();
         return delivery;
     }
+
+    public async Task<Delivery> Handle(StartDispatchCommand command)
+    {
+        var delivery = await _deliveryRepository.FindByIdAsync(command.DeliveryId)
+            ?? throw new KeyNotFoundException($"Delivery {command.DeliveryId} not found.");
+        delivery.StartDispatch();
+        _deliveryRepository.Update(delivery);
+        await _unitOfWork.CompleteAsync();
+        return delivery;
+    }
+
+    public async Task<Delivery> Handle(ReportDelayCommand command)
+    {
+        var delivery = await _deliveryRepository.FindByIdAsync(command.DeliveryId)
+            ?? throw new KeyNotFoundException($"Delivery {command.DeliveryId} not found.");
+        delivery.ReportDelay(command.Reason);
+        _deliveryRepository.Update(delivery);
+        await _unitOfWork.CompleteAsync();
+        return delivery;
+    }
 }

@@ -6,4 +6,6 @@ namespace DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServic
 public interface IDeliveryCommandService
 {
     Task<Delivery> Handle(CreateDeliveryCommand command);
+    Task<Delivery> Handle(StartDispatchCommand command);
+    Task<Delivery> Handle(ReportDelayCommand command);
 }

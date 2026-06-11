@@ -224,7 +224,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             nav.Property(x => x.Destination).HasColumnName("route_destination").IsRequired();
             nav.Property(x => x.DistanceKm).HasColumnName("route_distance_km").IsRequired();
             nav.WithOwner().HasForeignKey("Id"); 
-        });
+        }); 
+        builder.Entity<Delivery>().Property(d => d.DelayReason);
+
         
         builder.UseSnakeCaseNamingConvention();
     }

@@ -34,4 +34,21 @@ public class Delivery : IAuditableEntity
     {
         CurrentStatus = newStatus;
     }
+    
+    public string? DelayReason { get; private set; }
+
+    public void StartDispatch()
+    {
+        if (CurrentStatus != DeliveryStatus.PendingDispatch)
+            throw new InvalidOperationException("Delivery must be in PendingDispatch to start.");
+        CurrentStatus = DeliveryStatus.InTransit;
+    }
+
+    public void ReportDelay(string reason)
+    {
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new ArgumentException("Delay reason is required.");
+        CurrentStatus = DeliveryStatus.Delayed;
+        DelayReason   = reason.Trim();
+    }
 }

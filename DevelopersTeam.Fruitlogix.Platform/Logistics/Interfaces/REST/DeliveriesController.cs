@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Commands;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Interfaces.REST.Transform;
@@ -56,5 +57,28 @@ public class DeliveriesController : ControllerBase
         var result     = deliveries.Select(
             DeliveryResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(result);
+    }
+    
+    /// <summary>Starts the dispatch of a delivery.</summary>
+    [HttpPost("{id:int}/start-dispatch")]
+    [ProducesResponseType(typeof(DeliveryResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> StartDispatch(int id)
+    {
+        var command  = new StartDispatchCommand(id);
+        var delivery = await _deliveryCommandService.Handle(command);
+        return Ok(DeliveryResourceFromEntityAssembler.ToResourceFromEntity(delivery));
+    }
+
+    /// <summary>Reports a delay for a delivery.</summary>
+    [HttpPost("{id:int}/report-delay")]
+    [ProducesResponseType(typeof(DeliveryResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ReportDelay(int id, [FromBody] ReportDelayResource resource)
+    {
+        var command  = new ReportDelayCommand(id, resource.Reason);
+        var delivery = await _deliveryCommandService.Handle(command);
+        return Ok(DeliveryResourceFromEntityAssembler.ToResourceFromEntity(delivery));
     }
 }
