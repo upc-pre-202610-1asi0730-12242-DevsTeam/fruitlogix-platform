@@ -70,6 +70,9 @@ builder.Services.AddScoped<IDeliveryQueryService, DeliveryQueryService>();
 builder.Services.AddScoped<ITrackingLogRepository, TrackingLogRepository>();
 builder.Services.AddScoped<ITrackingLogCommandService, TrackingLogCommandService>();
 builder.Services.AddScoped<ITrackingLogQueryService, TrackingLogQueryService>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

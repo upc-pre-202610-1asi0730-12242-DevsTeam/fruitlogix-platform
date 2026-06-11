@@ -242,6 +242,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             nav.WithOwner().HasForeignKey("Id");
         });
         
+        builder.Entity<Alert>().HasKey(a => a.Id);
+        builder.Entity<Alert>().Property(a => a.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Alert>().Property(a => a.DeliveryId).IsRequired();
+        builder.Entity<Alert>().Property(a => a.Type).HasConversion<string>().IsRequired();
+        builder.Entity<Alert>().Property(a => a.Severity).HasConversion<string>().IsRequired();
+        builder.Entity<Alert>().Property(a => a.Message).IsRequired();
+        builder.Entity<Alert>().Property(a => a.IsResolved).IsRequired();
         
         builder.UseSnakeCaseNamingConvention();
     }
