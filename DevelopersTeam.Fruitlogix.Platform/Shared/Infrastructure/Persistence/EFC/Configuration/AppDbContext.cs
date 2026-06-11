@@ -1,4 +1,5 @@
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
@@ -227,6 +228,20 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         }); 
         builder.Entity<Delivery>().Property(d => d.DelayReason);
 
+        builder.Entity<TrackingLog>().HasKey(t => t.Id);
+        builder.Entity<TrackingLog>().Property(t => t.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<TrackingLog>().Property(t => t.DeliveryId).IsRequired();
+        builder.Entity<TrackingLog>().Property(t => t.Timestamp).IsRequired();
+        builder.Entity<TrackingLog>().Property(t => t.Temperature).IsRequired();
+        builder.Entity<TrackingLog>().Property(t => t.Humidity).IsRequired();
+
+        builder.Entity<TrackingLog>().OwnsOne(t => t.Location, nav =>
+        {
+            nav.Property(x => x.Latitude).HasColumnName("latitude").IsRequired();
+            nav.Property(x => x.Longitude).HasColumnName("longitude").IsRequired();
+            nav.WithOwner().HasForeignKey("Id");
+        });
+        
         
         builder.UseSnakeCaseNamingConvention();
     }
