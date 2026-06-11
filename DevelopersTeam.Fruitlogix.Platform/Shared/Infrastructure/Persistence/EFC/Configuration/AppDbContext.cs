@@ -122,13 +122,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<HarvestBatch>(entity =>
         {
             entity.HasKey(b => b.Id);
+            entity.Property(b => b.Id).IsRequired().ValueGeneratedOnAdd();
+
             entity.Property(b => b.FruitType).IsRequired().HasMaxLength(100);
             entity.Property(b => b.QuantityKg).IsRequired();
             entity.Property(b => b.HarvestDate).IsRequired();
             entity.Property(b => b.Status)
                 .HasConversion<string>() // guarda "Pending", "Approved", etc.
                 .IsRequired();
-        });  
+        }); 
         
         builder.UseSnakeCaseNamingConvention();
     }
