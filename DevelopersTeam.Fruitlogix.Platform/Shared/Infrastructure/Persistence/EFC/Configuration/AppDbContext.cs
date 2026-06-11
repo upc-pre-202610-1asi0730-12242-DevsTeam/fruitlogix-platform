@@ -3,6 +3,8 @@ using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Interceptors;
+// Agregar en AppDbContext.cs — sección usings de Profiles
+using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -70,6 +72,43 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .HasColumnType("decimal(10,2)")
             .IsRequired();
         builder.Entity<OrderItem>().Ignore(i => i.Subtotal);
+        
+        //Profiles
+        builder.Entity<Producer>().HasKey(p => p.Id);
+        builder.Entity<Producer>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
+
+        builder.Entity<Producer>().Property(p => p.ProducerType)
+            .HasConversion<string>().IsRequired();
+
+        builder.Entity<Producer>().OwnsOne(p => p.TaxId, vo =>
+            vo.Property(t => t.Value).HasColumnName("tax_id").IsRequired());
+
+        builder.Entity<Producer>().OwnsOne(p => p.ContactInfo, vo =>
+        {
+            vo.Property(c => c.Email).HasColumnName("email").IsRequired();
+            vo.Property(c => c.Phone).HasColumnName("phone").IsRequired();
+        });
+
+        builder.Entity<Producer>().OwnsOne(p => p.Location, vo =>
+        {
+            vo.Property(l => l.Country).HasColumnName("country");
+            vo.Property(l => l.Region).HasColumnName("region");
+            vo.Property(l => l.City).HasColumnName("city");
+            vo.Property(l => l.Address).HasColumnName("address");
+        });
+
+        builder.Entity<Producer>().OwnsOne(p => p.ProductionInfo, vo =>
+        {
+            vo.Property(pi => pi.Crop).HasColumnName("crop").IsRequired();
+            vo.Property(pi => pi.CultivatedHectares).HasColumnName("cultivated_hectares");
+            vo.Property(pi => pi.MonthlyProduction).HasColumnName("monthly_production");
+        });
+
+        builder.Entity<Producer>().Property(p => p.FullName).IsRequired();
+        builder.Entity<Producer>().Property(p => p.LegalName).IsRequired();
+        builder.Entity<Producer>().Property(p => p.Rating).IsRequired();
+        builder.Entity<Producer>().Property(p => p.Certifications);
+        builder.Entity<Producer>().Property(p => p.Photo);
 
         builder.UseSnakeCaseNamingConvention();
     }
