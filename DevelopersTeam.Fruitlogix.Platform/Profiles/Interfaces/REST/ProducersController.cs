@@ -44,4 +44,19 @@ public class ProducersController(
         if (producer is null) return NotFound(new { message = $"Producer with id {id} not found." });
         return Ok(ProducerResourceAssembler.ToResourceFromEntity(producer));
     }
+    
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateProducer(int id, [FromBody] UpdateProducerResource resource)
+    {
+        try
+        {
+            var command  = ProducerResourceAssembler.ToCommandFromResource(id, resource);
+            var producer = await producerCommandService.Handle(command);
+            var result   = ProducerResourceAssembler.ToResourceFromEntity(producer);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)      { return NotFound(new { message = ex.Message }); }
+        catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
+        catch (ArgumentException ex)         { return BadRequest(new { message = ex.Message }); }
+    }
 }

@@ -38,4 +38,19 @@ public class Producer : IAuditableEntity
         Certifications      = command.Certifications ?? string.Empty;
         Photo               = command.Photo ?? string.Empty;
     }
+    
+    public void Update(UpdateProducerCommand command)
+    {
+        ProducerType        = Enum.Parse<ProducerType>(command.ProducerType, ignoreCase: true);
+        FullName            = command.FullName;
+        TaxId               = new TaxId(command.TaxId);
+        LegalName           = command.LegalName;
+        ContactInfo         = new ContactInfo(command.Email, command.Phone);
+        Location            = new Location(command.Country, command.Region, command.City, command.Address);
+        ProductionInfo      = new ProductionInfo(command.Crop, command.CultivatedHectares, command.MonthlyProduction);
+        OperationsStartDate = command.OperationsStartDate;
+        Certifications      = command.Certifications ?? string.Empty;
+        Photo               = command.Photo ?? string.Empty;
+        // Rating nunca se toca aquí
+    }
 }

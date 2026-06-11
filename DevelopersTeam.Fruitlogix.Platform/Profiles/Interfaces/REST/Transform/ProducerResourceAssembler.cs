@@ -47,4 +47,24 @@ public static class ProducerResourceAssembler
             producer.Certifications,
             producer.Photo
         );
+    public static UpdateProducerCommand ToCommandFromResource(int id, UpdateProducerResource resource) =>
+        new(
+            id,
+            resource.ProducerType,
+            resource.FullName,
+            resource.TaxId,
+            resource.LegalName,
+            resource.Email,
+            resource.Phone,
+            resource.Country,
+            resource.Region,
+            resource.City,
+            resource.Address,
+            resource.Crop,
+            resource.CultivatedHectares,
+            resource.MonthlyProduction,
+            resource.OperationsStartDate,
+            resource.Certifications,
+            resource.Photo
+        );
 }

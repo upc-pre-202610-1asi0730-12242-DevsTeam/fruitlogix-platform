@@ -20,4 +20,23 @@ public class ProducerCommandService(
         await unitOfWork.CompleteAsync();
         return producer;
     }
+    
+    public async Task<Producer> Handle(UpdateProducerCommand command)
+    {
+        var producer = await producerRepository.FindByIdAsync(command.Id)
+                       ?? throw new KeyNotFoundException($"Producer with id {command.Id} not found.");
+
+        // Validar TaxId duplicado solo si está cambiando
+        if (producer.TaxId.Value != command.TaxId)
+        {
+            var existing = await producerRepository.FindByTaxIdAsync(command.TaxId);
+            if (existing is not null)
+                throw new InvalidOperationException($"TaxId '{command.TaxId}' is already in use.");
+        }
+
+        producer.Update(command);
+        producerRepository.Update(producer);
+        await unitOfWork.CompleteAsync();
+        return producer;
+    }
 }
