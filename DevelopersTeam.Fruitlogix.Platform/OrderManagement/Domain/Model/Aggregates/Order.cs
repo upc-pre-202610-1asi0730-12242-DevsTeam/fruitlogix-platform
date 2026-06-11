@@ -90,4 +90,17 @@ public class Order : IAuditableEntity
         CancellationReason = reason;
         Status = OrderStatus.Rejected;
     }
+    
+    public void ConfirmReception(int rating, string comment, bool hasIncidence)
+    {
+        if (Status != OrderStatus.InTransit)
+            throw new InvalidOperationException("Order must be in transit to confirm reception.");
+
+        if (rating < 1 || rating > 5)
+            throw new ArgumentOutOfRangeException(nameof(rating), "Rating must be between 1 and 5.");
+
+        Status = hasIncidence ? OrderStatus.DeliveredWithIncidence : OrderStatus.Delivered;
+        Notes = $"[Rating: {rating}/5] {comment}";
+    }
+    
 }

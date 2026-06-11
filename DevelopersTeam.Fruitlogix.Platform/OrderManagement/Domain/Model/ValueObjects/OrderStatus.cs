@@ -7,5 +7,6 @@ public enum OrderStatus
     InTransit,
     Delivered,
     Rejected,
-    Cancelled
+    Cancelled,
+    DeliveredWithIncidence
 }
