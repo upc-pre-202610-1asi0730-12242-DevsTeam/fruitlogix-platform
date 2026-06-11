@@ -5,6 +5,7 @@ using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.C
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Interceptors;
 // Agregar en AppDbContext.cs — sección usings de Profiles
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -108,6 +109,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             vo.Property(l => l.Address).HasColumnName("address");
             vo.WithOwner().HasForeignKey("Id");
         });
+        
 
         builder.Entity<Producer>().OwnsOne(p => p.ProductionInfo, vo =>
         {
@@ -117,6 +119,20 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             vo.WithOwner().HasForeignKey("Id");
         });
 
+        builder.Entity<HarvestBatch>(entity =>
+        {
+            entity.HasKey(b => b.Id);
+            entity.Property(b => b.Id).IsRequired().ValueGeneratedOnAdd();
+
+            entity.Property(b => b.FruitType).IsRequired().HasMaxLength(100);
+            entity.Property(b => b.QuantityKg).IsRequired();
+            entity.Property(b => b.HarvestDate).IsRequired();
+            entity.Property(b => b.Status)
+                .HasConversion<string>() // guarda "Pending", "Approved", etc.
+                .IsRequired();
+        }); 
+        
         builder.UseSnakeCaseNamingConvention();
     }
+    
 }

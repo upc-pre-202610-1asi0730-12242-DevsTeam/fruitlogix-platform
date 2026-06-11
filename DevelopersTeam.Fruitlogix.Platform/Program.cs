@@ -15,7 +15,10 @@ using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.Internal.QueryServices;
-
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);   
@@ -36,6 +39,13 @@ builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 builder.Services.AddScoped<IProducerRepository, ProducerRepository>();
 builder.Services.AddScoped<IProducerCommandService, ProducerCommandService>();
 builder.Services.AddScoped<IProducerQueryService, ProducerQueryService>();
+
+// Quality Control BC
+
+// Registrar repositorio e implementación del command service de QualityControl
+builder.Services.AddScoped<IHarvestBatchRepository, HarvestBatchRepository>();
+builder.Services.AddScoped<IHarvestBatchCommandService, HarvestBatchCommandService>();
+
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
