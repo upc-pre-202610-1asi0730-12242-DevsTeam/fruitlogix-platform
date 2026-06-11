@@ -1,5 +1,6 @@
-﻿// Ruta: QualityControl/Interfaces/REST/QualityInspectionsController.cs
-using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.CommandServices;
+﻿using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,23 @@ namespace DevelopersTeam.Fruitlogix.Platform.QualityControl.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 public class QualityInspectionsController(
-    IQualityInspectionCommandService commandService
+    IQualityInspectionCommandService commandService,
+    IQualityInspectionQueryService   queryService
 ) : ControllerBase
 {
+    // GET api/v1/quality-inspections/batch/{batchId}
+    [HttpGet("batch/{batchId:int}")]
+    public async Task<IActionResult> GetByBatchId(int batchId)
+    {
+        var query      = new GetQualityInspectionByBatchIdQuery(batchId);
+        var inspection = await queryService.Handle(query);
+
+        if (inspection is null)
+            return NotFound($"No quality inspection found for batch {batchId}.");
+
+        return Ok(QualityInspectionResourceAssembler.ToResourceFromEntity(inspection));
+    }
+
     // POST api/v1/quality-inspections
     [HttpPost]
     public async Task<IActionResult> CreateQualityInspection(
@@ -21,7 +36,7 @@ public class QualityInspectionsController(
         var inspection = await commandService.Handle(command);
         var result     = QualityInspectionResourceAssembler.ToResourceFromEntity(inspection);
 
-        return CreatedAtAction(nameof(CreateQualityInspection),
-            new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetByBatchId),
+            new { batchId = result.BatchId }, result);
     }
 }
