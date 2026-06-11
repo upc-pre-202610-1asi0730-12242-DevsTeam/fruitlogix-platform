@@ -13,6 +13,8 @@ using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.Internal.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Infrastructure.Persistence.EFC.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.Internal.QueryServices;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +35,7 @@ builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 // Profiles BC
 builder.Services.AddScoped<IProducerRepository, ProducerRepository>();
 builder.Services.AddScoped<IProducerCommandService, ProducerCommandService>();
+builder.Services.AddScoped<IProducerQueryService, ProducerQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
