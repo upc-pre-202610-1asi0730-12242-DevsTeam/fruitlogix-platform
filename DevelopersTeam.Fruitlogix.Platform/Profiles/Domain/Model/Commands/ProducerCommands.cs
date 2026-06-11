@@ -38,3 +38,5 @@ public record UpdateProducerCommand(
     string Certifications,
     string Photo
 );
+
+public record DeleteProducerCommand(int Id);

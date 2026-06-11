@@ -8,5 +8,7 @@ public interface IProducerCommandService
     Task<Producer> Handle(CreateProducerCommand command);
     
     Task<Producer> Handle(UpdateProducerCommand command);
-
+    
+    Task Handle(DeleteProducerCommand command);
+    
 }

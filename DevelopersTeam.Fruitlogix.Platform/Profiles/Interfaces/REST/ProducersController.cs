@@ -3,6 +3,7 @@ using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Interfaces.REST.Transform;
+using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevelopersTeam.Fruitlogix.Platform.Profiles.Interfaces.REST;
@@ -58,5 +59,16 @@ public class ProducersController(
         catch (KeyNotFoundException ex)      { return NotFound(new { message = ex.Message }); }
         catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
         catch (ArgumentException ex)         { return BadRequest(new { message = ex.Message }); }
+    }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteProducer(int id)
+    {
+        try
+        {
+            await producerCommandService.Handle(new DeleteProducerCommand(id));
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
     }
 }
