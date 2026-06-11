@@ -53,7 +53,8 @@ builder.Services.AddScoped<IQualityInspectionRepository, QualityInspectionReposi
 builder.Services.AddScoped<IQualityInspectionCommandService, QualityInspectionCommandService>();
 builder.Services.AddScoped<IQualityInspectionQueryService, QualityInspectionQueryService>();
 
-
+builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
+builder.Services.AddScoped<IIncidentCommandService, IncidentCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

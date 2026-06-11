@@ -177,6 +177,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasKey(c => c.Id);
         });
         
+        builder.Entity<Incident>(entity =>
+        {
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.Description).IsRequired().HasMaxLength(1000);
+            entity.Property(i => i.EvidenceUrls).IsRequired();  // JSON string
+            entity.Property(i => i.Status)
+                .HasConversion<string>()
+                .IsRequired();
+        });
         
         builder.UseSnakeCaseNamingConvention();
     }
