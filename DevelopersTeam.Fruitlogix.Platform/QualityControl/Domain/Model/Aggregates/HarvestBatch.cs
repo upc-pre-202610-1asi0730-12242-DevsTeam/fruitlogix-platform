@@ -28,4 +28,10 @@ public class HarvestBatch : IAuditableEntity
         HarvestDate  = harvestDate;
         Status       = BatchStatus.Pending;
     }
+    
+    public void UpdateStatus(BatchStatus newStatus)
+    {
+        Status = newStatus;
+    }
+    
 }

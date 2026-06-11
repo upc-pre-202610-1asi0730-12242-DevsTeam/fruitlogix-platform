@@ -31,4 +31,24 @@ public class HarvestBatchesController(
         var result  = HarvestBatchResourceAssembler.ToResourceFromEntity(batch);
         return CreatedAtAction(nameof(CreateHarvestBatch), new { id = result.Id }, result);
     }
+    
+    [HttpPatch("{id:int}/status")]
+    public async Task<IActionResult> UpdateHarvestBatchStatus(
+        int id, [FromBody] UpdateHarvestBatchStatusResource resource)
+    {
+        try
+        {
+            var command = HarvestBatchResourceAssembler.ToCommandFromResource(id, resource);
+            var batch   = await commandService.Handle(command);
+
+            if (batch is null)
+                return NotFound($"HarvestBatch with id {id} not found.");
+
+            return Ok(HarvestBatchResourceAssembler.ToResourceFromEntity(batch));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

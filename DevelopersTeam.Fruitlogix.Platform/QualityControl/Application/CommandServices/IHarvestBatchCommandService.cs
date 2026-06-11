@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.CommandS
 public interface IHarvestBatchCommandService
 {
     Task<HarvestBatch> Handle(CreateHarvestBatchCommand command);
+    Task<HarvestBatch?> Handle(UpdateHarvestBatchStatusCommand command);
 }
