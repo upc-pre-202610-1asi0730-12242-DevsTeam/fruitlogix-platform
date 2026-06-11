@@ -1,5 +1,7 @@
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.Internal.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.CommandServices;
@@ -64,6 +66,7 @@ builder.Services.AddScoped<IIncidentQueryService, IncidentQueryService>();
 // Logistics
 builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
 builder.Services.AddScoped<IDeliveryCommandService, DeliveryCommandService>();
+builder.Services.AddScoped<IDeliveryQueryService, DeliveryQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

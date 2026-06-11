@@ -1,5 +1,7 @@
 ﻿using System.Net.Mime;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
@@ -30,5 +32,29 @@ public class DeliveriesController : ControllerBase
         var delivery = await _deliveryCommandService.Handle(command);
         var result   = DeliveryResourceFromEntityAssembler.ToResourceFromEntity(delivery);
         return CreatedAtAction(nameof(CreateDelivery), new { id = result.Id }, result);
+    }
+    
+    
+    private readonly IDeliveryQueryService _deliveryQueryService;
+
+    public DeliveriesController(
+        IDeliveryCommandService deliveryCommandService,
+        IDeliveryQueryService deliveryQueryService)
+    {
+        _deliveryCommandService = deliveryCommandService;
+        _deliveryQueryService   = deliveryQueryService;
+    }
+    
+    /// <summary>Returns all deliveries.</summary>
+    /// <returns>List of all deliveries.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<DeliveryResource>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllDeliveries()
+    {
+        var query      = new GetAllDeliveriesQuery();
+        var deliveries = await _deliveryQueryService.Handle(query);
+        var result     = deliveries.Select(
+            DeliveryResourceFromEntityAssembler.ToResourceFromEntity);
+        return Ok(result);
     }
 }
