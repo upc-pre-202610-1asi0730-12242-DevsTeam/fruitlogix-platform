@@ -47,4 +47,16 @@ public class OrderCommandService(
         await unitOfWork.CompleteAsync();
         return order;
     }
+    
+    public async Task<Order?> Handle(ConfirmOrderReceptionCommand command)
+    {
+        var order = await orderRepository.FindByIdAsync(command.OrderId);
+        if (order is null) return null;
+
+        order.ConfirmReception(command.Rating, command.Comment, command.HasIncidence);
+        orderRepository.Update(order);
+        await unitOfWork.CompleteAsync();
+
+        return order;
+    }
 }

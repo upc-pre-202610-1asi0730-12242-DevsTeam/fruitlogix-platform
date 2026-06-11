@@ -9,4 +9,6 @@ public interface IOrderCommandService
     Task<Order?> Handle(UpdateOrderCommand command);
     Task<Order?> Handle(AssignProducerCommand command);
     Task<Order?> Handle(CancelOrderCommand command);
+    Task<Order?> Handle(ConfirmOrderReceptionCommand command);
+
 }

@@ -85,4 +85,20 @@ public class OrdersController(
         if (order is null) return NotFound();
         return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
     }
+    
+    [HttpPost("{orderId:int}/reception")]
+    public async Task<IActionResult> ConfirmOrderReception(
+        int orderId, [FromBody] ConfirmOrderReceptionResource resource)
+    {
+        // Usamos el nuevo Assembler que acabas de crear
+        var command = ConfirmOrderReceptionCommandFromResourceAssembler.ToCommandFromResource(orderId, resource);
+    
+        var order = await orderCommandService.Handle(command);
+
+        if (order is null)
+            return NotFound($"Order with id {orderId} not found.");
+
+        // Aquí sí usamos el Assembler viejo porque vamos de Entity a Resource para mostrar el resultado
+        return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
 }
