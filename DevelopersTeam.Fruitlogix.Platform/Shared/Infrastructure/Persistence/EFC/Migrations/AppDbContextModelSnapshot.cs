@@ -173,6 +173,58 @@ namespace DevelopersTeam.Fruitlogix.Platform.Migrations
                     b.ToTable("producers");
                 });
 
+            modelBuilder.Entity("DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates.HarvestBatch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("CreatedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("FruitType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("fruit_type");
+
+                    b.Property<DateOnly>("HarvestDate")
+                        .HasColumnType("date")
+                        .HasColumnName("harvest_date");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("int")
+                        .HasColumnName("producer_id");
+
+                    b.Property<double>("QuantityKg")
+                        .HasColumnType("double")
+                        .HasColumnName("quantity_kg");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_harvest_batches");
+
+                    b.ToTable("harvest_batches");
+                });
+
             modelBuilder.Entity("DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities.OrderItem", b =>
                 {
                     b.HasOne("DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates.Order", null)
