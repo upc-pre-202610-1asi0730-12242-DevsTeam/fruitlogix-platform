@@ -24,4 +24,18 @@ public class IncidentCommandService(
 
         return incident;
     }
+    
+    public async Task<Incident?> Handle(UpdateIncidentStatusCommand command)
+    {
+        var incident = await incidentRepository.FindByIdAsync(command.IncidentId);
+        if (incident is null) return null;
+
+        incident.UpdateStatus(command.NewStatus);
+        incidentRepository.Update(incident);
+        await unitOfWork.CompleteAsync();
+
+        return incident;
+    }
+    
+    
 }

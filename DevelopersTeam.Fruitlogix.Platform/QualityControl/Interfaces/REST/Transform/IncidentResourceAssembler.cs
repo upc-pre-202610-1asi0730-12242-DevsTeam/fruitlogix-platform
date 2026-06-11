@@ -1,5 +1,6 @@
 ﻿using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Commands;
+using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.ValueObjects;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Interfaces.REST.Resources;
 
 namespace DevelopersTeam.Fruitlogix.Platform.QualityControl.Interfaces.REST.Transform;
@@ -19,4 +20,14 @@ public static class IncidentResourceAssembler
             entity.CreatedAt,
             entity.ResolvedAt
         );
+    
+    public static UpdateIncidentStatusCommand ToCommandFromResource(
+        int incidentId, UpdateIncidentStatusResource resource)
+    {
+        if (!Enum.TryParse<IncidentStatus>(resource.Status, ignoreCase: true, out var status))
+            throw new ArgumentException($"Invalid status value: '{resource.Status}'.");
+
+        return new UpdateIncidentStatusCommand(incidentId, status);
+    }
+    
 }
