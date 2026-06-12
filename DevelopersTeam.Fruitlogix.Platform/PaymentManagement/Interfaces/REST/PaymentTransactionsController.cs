@@ -23,7 +23,6 @@ public class PaymentTransactionsController(
         if (transaction is null) return NotFound();
         var transactionResource =
             PaymentTransactionResourceFromEntityAssembler.ToResourceFromEntity(transaction);
-        return CreatedAtAction(nameof(CreatePaymentTransaction),
-            new { id = transaction.Id }, transactionResource);
+        return StatusCode(201, transactionResource);
     }
 }
