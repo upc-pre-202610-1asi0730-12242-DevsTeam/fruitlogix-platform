@@ -9,4 +9,7 @@ public class InvoiceQueryService(IInvoiceRepository invoiceRepository) : IInvoic
 {
     public async Task<IEnumerable<Invoice>> Handle(GetAllInvoicesQuery query) =>
         await invoiceRepository.ListAsync();
+
+    public async Task<Invoice?> Handle(GetInvoiceByIdQuery query) =>  // ← NUEVO
+        await invoiceRepository.FindByIdAsync(query.Id);
 }

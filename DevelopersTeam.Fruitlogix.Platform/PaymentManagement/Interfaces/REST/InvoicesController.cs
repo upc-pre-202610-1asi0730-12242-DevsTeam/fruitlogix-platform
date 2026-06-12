@@ -34,4 +34,15 @@ public class InvoicesController(
         var resources = invoices.Select(InvoiceResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+    
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(InvoiceResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetInvoiceById(int id)
+    {
+        var query = new GetInvoiceByIdQuery(id);
+        var invoice = await invoiceQueryService.Handle(query);
+        if (invoice is null) return NotFound();
+        return Ok(InvoiceResourceFromEntityAssembler.ToResourceFromEntity(invoice));
+    }
 }

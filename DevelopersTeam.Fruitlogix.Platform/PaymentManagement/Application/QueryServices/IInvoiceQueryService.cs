@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.Query
 public interface IInvoiceQueryService
 {
     Task<IEnumerable<Invoice>> Handle(GetAllInvoicesQuery query);
+    Task<Invoice?> Handle(GetInvoiceByIdQuery query);
 }
