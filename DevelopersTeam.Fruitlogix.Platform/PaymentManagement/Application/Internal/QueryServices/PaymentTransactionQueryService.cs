@@ -11,4 +11,7 @@ public class PaymentTransactionQueryService(
     public async Task<IEnumerable<PaymentTransaction>> Handle(
         GetAllPaymentTransactionsQuery query) =>
         await paymentTransactionRepository.ListAsync();
+    public async Task<PaymentTransaction?> Handle(
+        GetPaymentTransactionByIdQuery query) =>
+        await paymentTransactionRepository.FindByIdAsync(query.Id);
 }
