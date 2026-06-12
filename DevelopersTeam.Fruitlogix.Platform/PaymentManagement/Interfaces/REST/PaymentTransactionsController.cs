@@ -39,4 +39,15 @@ public class PaymentTransactionsController(
             .Select(PaymentTransactionResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(PaymentTransactionResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetPaymentTransactionById(int id)
+    {
+        var query = new GetPaymentTransactionByIdQuery(id);
+        var transaction = await paymentTransactionQueryService.Handle(query);
+        if (transaction is null) return NotFound();
+        return Ok(PaymentTransactionResourceFromEntityAssembler.ToResourceFromEntity(transaction));
+    }
+    
 }

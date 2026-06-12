@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Application.Query
 public interface IPaymentTransactionQueryService
 {
     Task<IEnumerable<PaymentTransaction>> Handle(GetAllPaymentTransactionsQuery query);
+    Task<PaymentTransaction?> Handle(GetPaymentTransactionByIdQuery query);
 }
