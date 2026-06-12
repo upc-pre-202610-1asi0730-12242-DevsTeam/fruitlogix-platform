@@ -84,6 +84,8 @@ builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceCommandService, InvoiceCommandService>();
 builder.Services.AddScoped<IInvoiceQueryService, InvoiceQueryService>();
+builder.Services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
+builder.Services.AddScoped<IPaymentTransactionCommandService, PaymentTransactionCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

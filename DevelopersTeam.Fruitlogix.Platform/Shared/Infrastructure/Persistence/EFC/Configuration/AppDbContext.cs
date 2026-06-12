@@ -274,6 +274,30 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Invoice>().Property(i => i.IssuedAt).IsRequired(false);
         builder.Entity<Invoice>().Property(i => i.PaidAt).IsRequired(false);
         
+        builder.Entity<PaymentTransaction>().HasKey(t => t.Id);
+        builder.Entity<PaymentTransaction>().Property(t => t.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<PaymentTransaction>().Property(t => t.InvoiceId).IsRequired();
+        builder.Entity<PaymentTransaction>().Property(t => t.GatewayRef).IsRequired().HasMaxLength(100);
+        builder.Entity<PaymentTransaction>().Property(t => t.ProcessedAt).IsRequired();
+
+        builder.Entity<PaymentTransaction>().OwnsOne(t => t.Amount, money =>
+        {
+            money.WithOwner().HasForeignKey("Id");
+            money.Property(m => m.Amount).HasColumnName("amount").IsRequired();
+            money.Property(m => m.Currency).HasColumnName("currency").HasMaxLength(3).IsRequired();
+        });
+
+        builder.Entity<PaymentTransaction>().OwnsOne(t => t.CardDetails, card =>
+        {
+            card.WithOwner().HasForeignKey("Id");
+            card.Property(c => c.CardEnding).HasColumnName("card_ending").HasMaxLength(4).IsRequired(false);
+            card.Property(c => c.CardBrand).HasColumnName("card_brand").HasMaxLength(20).IsRequired(false);
+        });
+
+        builder.Entity<PaymentTransaction>().Property(t => t.Method).HasConversion<string>().IsRequired();
+        builder.Entity<PaymentTransaction>().Property(t => t.Gateway).HasConversion<string>().IsRequired();
+        builder.Entity<PaymentTransaction>().Property(t => t.Status).HasConversion<string>().IsRequired();
+        
         builder.UseSnakeCaseNamingConvention();
     }
     
