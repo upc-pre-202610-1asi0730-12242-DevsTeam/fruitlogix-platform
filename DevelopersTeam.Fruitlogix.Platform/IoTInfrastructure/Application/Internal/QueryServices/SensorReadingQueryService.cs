@@ -10,4 +10,7 @@ public class SensorReadingQueryService(ISensorReadingRepository repository)
 {
     public async Task<IEnumerable<SensorReading>> Handle(GetAllSensorReadingsQuery query)
         => await repository.ListAsync();
+
+    public async Task<IEnumerable<SensorReading>> Handle(GetSensorReadingsByDeviceIdQuery query) // ← nueva impl
+        => await repository.FindByDeviceIdAsync(query.DeviceId);
 }

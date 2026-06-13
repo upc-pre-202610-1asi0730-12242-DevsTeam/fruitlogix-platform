@@ -5,4 +5,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Repositori
 
 public interface ISensorReadingRepository : IBaseRepository<SensorReading>
 {
+    Task<IEnumerable<SensorReading>> FindByDeviceIdAsync(int deviceId);
 }

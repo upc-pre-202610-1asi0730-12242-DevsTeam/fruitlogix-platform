@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.Query
 public interface ISensorReadingQueryService
 {
     Task<IEnumerable<SensorReading>> Handle(GetAllSensorReadingsQuery query);
+    Task<IEnumerable<SensorReading>> Handle(GetSensorReadingsByDeviceIdQuery query); // ← nueva firma
 }
