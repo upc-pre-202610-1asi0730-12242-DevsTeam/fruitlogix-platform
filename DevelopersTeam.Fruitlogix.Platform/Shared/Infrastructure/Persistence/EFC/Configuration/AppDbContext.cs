@@ -339,6 +339,34 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             rv.Property(v => v.Unit).HasColumnName("unit").IsRequired();
         });
         
+        builder.Entity<AlertRule>().HasKey(r => r.Id);
+        builder.Entity<AlertRule>().Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
+
+        builder.Entity<AlertRule>().OwnsOne(r => r.Threshold, nav =>
+        {
+            nav.WithOwner().HasForeignKey("Id");
+            nav.Property(v => v.Min).HasColumnName("min_threshold").IsRequired();
+            nav.Property(v => v.Max).HasColumnName("max_threshold").IsRequired();
+        });
+
+        builder.Entity<AlertRule>()
+            .Property(r => r.DeviceType)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Entity<AlertRule>()
+            .Property(r => r.Severity)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Entity<AlertRule>()
+            .Property(r => r.AlertMessage)
+            .IsRequired();
+
+        builder.Entity<AlertRule>()
+            .Property(r => r.IsActive)
+            .IsRequired();
+        
         builder.UseSnakeCaseNamingConvention();
     }
     
