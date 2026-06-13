@@ -327,6 +327,18 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .Property(d => d.LastReadingAt)
             .IsRequired(false);
         
+        builder.Entity<SensorReading>().HasKey(r => r.Id);
+        builder.Entity<SensorReading>().Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<SensorReading>().Property(r => r.DeviceId).IsRequired();
+        builder.Entity<SensorReading>().Property(r => r.Timestamp).IsRequired();
+
+        builder.Entity<SensorReading>().OwnsOne(r => r.Reading, rv =>
+        {
+            rv.WithOwner().HasForeignKey("Id");
+            rv.Property(v => v.Value).HasColumnName("value").IsRequired();
+            rv.Property(v => v.Unit).HasColumnName("unit").IsRequired();
+        });
+        
         builder.UseSnakeCaseNamingConvention();
     }
     
