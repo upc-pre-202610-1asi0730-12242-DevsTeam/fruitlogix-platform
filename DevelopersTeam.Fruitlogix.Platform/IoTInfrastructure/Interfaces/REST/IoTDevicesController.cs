@@ -21,4 +21,15 @@ public class IoTDevicesController(IIoTDeviceQueryService queryService) : Control
         var resources = devices.Select(IoTDeviceResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+    
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(IoTDeviceResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetDeviceById(int id)
+    {
+        var query = new GetIoTDeviceByIdQuery(id);
+        var device = await queryService.Handle(query);
+        if (device is null) return NotFound();
+        return Ok(IoTDeviceResourceFromEntityAssembler.ToResourceFromEntity(device));
+    }
 }

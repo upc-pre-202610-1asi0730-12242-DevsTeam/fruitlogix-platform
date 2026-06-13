@@ -6,4 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.Query
 public interface IIoTDeviceQueryService
 {
     Task<IEnumerable<IoTDevice>> Handle(GetAllDevicesQuery query);
+    Task<IoTDevice?> Handle(GetIoTDeviceByIdQuery query);  // ← nueva firma
 }
