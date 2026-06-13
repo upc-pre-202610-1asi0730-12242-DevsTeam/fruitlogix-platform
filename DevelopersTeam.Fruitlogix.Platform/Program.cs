@@ -1,3 +1,7 @@
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.Internal.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Repositories;
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.Internal.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Application.Internal.QueryServices;
@@ -20,7 +24,6 @@ using DevelopersTeam.Fruitlogix.Platform.Shared.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Interfaces.ASP.Configuration;
-// Agregar en Program.cs — sección usings de Profiles
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Application.Internal.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Repositories;
@@ -87,6 +90,10 @@ builder.Services.AddScoped<IInvoiceQueryService, InvoiceQueryService>();
 builder.Services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
 builder.Services.AddScoped<IPaymentTransactionCommandService, PaymentTransactionCommandService>();
 builder.Services.AddScoped<IPaymentTransactionQueryService, PaymentTransactionQueryService>();
+
+// IoTInfrastructure
+builder.Services.AddScoped<IIoTDeviceRepository, IoTDeviceRepository>();
+builder.Services.AddScoped<IIoTDeviceQueryService, IoTDeviceQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

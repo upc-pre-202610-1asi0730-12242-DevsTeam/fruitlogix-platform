@@ -1,3 +1,4 @@
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
@@ -10,7 +11,6 @@ using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.I
 using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
-using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Entities;
 
 namespace DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -297,6 +297,35 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<PaymentTransaction>().Property(t => t.Method).HasConversion<string>().IsRequired();
         builder.Entity<PaymentTransaction>().Property(t => t.Gateway).HasConversion<string>().IsRequired();
         builder.Entity<PaymentTransaction>().Property(t => t.Status).HasConversion<string>().IsRequired();
+        
+        // IotInfrastructure
+
+        builder.Entity<IoTDevice>().HasKey(d => d.Id);
+        builder.Entity<IoTDevice>().Property(d => d.Id).IsRequired().ValueGeneratedOnAdd();
+
+        builder.Entity<IoTDevice>().OwnsOne(d => d.DeviceCode, dc =>
+        {
+            dc.WithOwner().HasForeignKey("Id");
+            dc.Property(v => v.Value).HasColumnName("device_code").IsRequired();
+        });
+
+        builder.Entity<IoTDevice>()
+            .Property(d => d.DeviceType)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Entity<IoTDevice>()
+            .Property(d => d.Status)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Entity<IoTDevice>()
+            .Property(d => d.Location)
+            .IsRequired();
+
+        builder.Entity<IoTDevice>()
+            .Property(d => d.LastReadingAt)
+            .IsRequired(false);
         
         builder.UseSnakeCaseNamingConvention();
     }
