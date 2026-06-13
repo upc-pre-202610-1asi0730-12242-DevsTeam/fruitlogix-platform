@@ -42,4 +42,14 @@ public class SensorReadingsController(
         var resources = readings.Select(SensorReadingResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+    
+    [HttpGet("device/{deviceId:int}")]
+    [ProducesResponseType(typeof(IEnumerable<SensorReadingResource>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetReadingsByDeviceId(int deviceId)
+    {
+        var query = new GetSensorReadingsByDeviceIdQuery(deviceId);
+        var readings = await queryService.Handle(query);
+        var resources = readings.Select(SensorReadingResourceFromEntityAssembler.ToResourceFromEntity);
+        return Ok(resources);
+    }
 }

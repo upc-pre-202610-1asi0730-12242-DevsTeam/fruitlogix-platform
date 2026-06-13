@@ -2,10 +2,14 @@
 using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
-
+using Microsoft.EntityFrameworkCore;
 namespace DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Infrastructure.Persistence.EFC.Repositories;
 
 public class SensorReadingRepository(AppDbContext context)
     : BaseRepository<SensorReading>(context), ISensorReadingRepository
 {
+    public async Task<IEnumerable<SensorReading>> FindByDeviceIdAsync(int deviceId)
+        => await context.Set<SensorReading>()
+            .Where(r => r.DeviceId == deviceId)
+            .ToListAsync();
 }
