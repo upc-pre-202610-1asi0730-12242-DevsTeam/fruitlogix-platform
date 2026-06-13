@@ -99,6 +99,7 @@ builder.Services.AddScoped<IIoTDeviceQueryService, IoTDeviceQueryService>();
 builder.Services.AddScoped<IIoTDeviceCommandService, IoTDeviceCommandService>();
 builder.Services.AddScoped<ISensorReadingRepository, SensorReadingRepository>();
 builder.Services.AddScoped<ISensorReadingCommandService, SensorReadingCommandService>();
+builder.Services.AddScoped<ISensorReadingQueryService, SensorReadingQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
