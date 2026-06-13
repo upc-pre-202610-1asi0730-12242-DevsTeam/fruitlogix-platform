@@ -10,4 +10,7 @@ public class IoTDeviceQueryService(IIoTDeviceRepository repository)
 {
     public async Task<IEnumerable<IoTDevice>> Handle(GetAllDevicesQuery query)
         => await repository.ListAsync();
+
+    public async Task<IoTDevice?> Handle(GetIoTDeviceByIdQuery query)  // ← nueva impl
+        => await repository.FindByIdAsync(query.Id);
 }
