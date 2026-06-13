@@ -1,6 +1,7 @@
 using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Entities;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
@@ -365,6 +366,18 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.Entity<AlertRule>()
             .Property(r => r.IsActive)
+            .IsRequired();
+        
+        //Messaging
+        
+        builder.Entity<Conversation>().HasKey(c => c.Id);
+        builder.Entity<Conversation>().Property(c => c.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Conversation>().Property(c => c.OrderId)
+            .IsRequired();
+        builder.Entity<Conversation>().Property(c => c.ParticipantAId)
+            .IsRequired();
+        builder.Entity<Conversation>().Property(c => c.ParticipantBId)
             .IsRequired();
         
         builder.UseSnakeCaseNamingConvention();
