@@ -1,3 +1,5 @@
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.Internal.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.Internal.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Repositories;
@@ -94,6 +96,7 @@ builder.Services.AddScoped<IPaymentTransactionQueryService, PaymentTransactionQu
 // IoTInfrastructure
 builder.Services.AddScoped<IIoTDeviceRepository, IoTDeviceRepository>();
 builder.Services.AddScoped<IIoTDeviceQueryService, IoTDeviceQueryService>();
+builder.Services.AddScoped<IIoTDeviceCommandService, IoTDeviceCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
