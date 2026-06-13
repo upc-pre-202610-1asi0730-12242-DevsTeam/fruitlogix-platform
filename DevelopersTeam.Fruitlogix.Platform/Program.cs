@@ -97,6 +97,8 @@ builder.Services.AddScoped<IPaymentTransactionQueryService, PaymentTransactionQu
 builder.Services.AddScoped<IIoTDeviceRepository, IoTDeviceRepository>();
 builder.Services.AddScoped<IIoTDeviceQueryService, IoTDeviceQueryService>();
 builder.Services.AddScoped<IIoTDeviceCommandService, IoTDeviceCommandService>();
+builder.Services.AddScoped<ISensorReadingRepository, SensorReadingRepository>();
+builder.Services.AddScoped<ISensorReadingCommandService, SensorReadingCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
