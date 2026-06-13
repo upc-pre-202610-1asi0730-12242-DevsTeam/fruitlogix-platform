@@ -102,6 +102,7 @@ builder.Services.AddScoped<ISensorReadingCommandService, SensorReadingCommandSer
 builder.Services.AddScoped<ISensorReadingQueryService, SensorReadingQueryService>();
 builder.Services.AddScoped<IAlertRuleRepository, AlertRuleRepository>();
 builder.Services.AddScoped<IAlertRuleCommandService, AlertRuleCommandService>();
+builder.Services.AddScoped<IAlertRuleQueryService, AlertRuleQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
