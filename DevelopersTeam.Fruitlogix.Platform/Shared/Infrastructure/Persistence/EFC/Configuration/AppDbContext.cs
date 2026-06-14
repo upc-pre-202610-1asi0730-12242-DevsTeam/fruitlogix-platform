@@ -2,6 +2,7 @@ using DevelopersTeam.Fruitlogix.Platform.IoTInfrastructure.Domain.Model.Aggregat
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.ValueObjects;
@@ -379,6 +380,28 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .IsRequired();
         builder.Entity<Conversation>().Property(c => c.ParticipantBId)
             .IsRequired();
+        // Delta AppDbContext.cs
+        builder.Entity<Conversation>()
+            .HasMany(c => c.Messages)
+            .WithOne()
+            .HasForeignKey("ConversationId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Message>().HasKey(m => m.Id);
+        builder.Entity<Message>().Property(m => m.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Message>().Property(m => m.SenderId)
+            .IsRequired();
+        builder.Entity<Message>().Property(m => m.SentAt)
+            .IsRequired();
+
+        builder.Entity<Message>().OwnsOne(m => m.Content, content =>
+        {
+            content.WithOwner().HasForeignKey("Id");
+            content.Property(c => c.Value)
+                .HasColumnName("content")
+                .IsRequired();
+        });
         
         builder.UseSnakeCaseNamingConvention();
     }

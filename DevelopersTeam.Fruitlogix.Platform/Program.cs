@@ -111,6 +111,7 @@ builder.Services.AddScoped<IAlertRuleQueryService, AlertRuleQueryService>();
 // Messaging
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IConversationCommandService, ConversationCommandService>();
+builder.Services.AddScoped<IMessageCommandService, MessageCommandService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
