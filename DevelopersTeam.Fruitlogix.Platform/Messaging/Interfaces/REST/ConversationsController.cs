@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST.Transform;
@@ -11,7 +12,7 @@ namespace DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class ConversationsController(IConversationCommandService conversationCommandService, IMessageCommandService messageCommandService, IMessageQueryService messageQueryService)
+public class ConversationsController(IConversationCommandService conversationCommandService, IMessageCommandService messageCommandService, IMessageQueryService messageQueryService, IConversationQueryService   conversationQueryService)
     : ControllerBase
 {
     [HttpPost]
@@ -72,5 +73,25 @@ public class ConversationsController(IConversationCommandService conversationCom
         {
             return NotFound(ex.Message);
         }
+    }
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<ConversationResource>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetConversations([FromQuery] int? userId)
+    {
+        IEnumerable<Conversation> conversations;
+
+        if (userId.HasValue)
+        {
+            var query = new GetConversationsByUserIdQuery(userId.Value);
+            conversations = await conversationQueryService.Handle(query);
+        }
+        else
+        {
+            var query = new GetAllConversationsQuery();
+            conversations = await conversationQueryService.Handle(query);
+        }
+
+        var result = conversations.Select(ConversationResourceAssembler.ToResourceFromEntity);
+        return Ok(result);
     }
 }

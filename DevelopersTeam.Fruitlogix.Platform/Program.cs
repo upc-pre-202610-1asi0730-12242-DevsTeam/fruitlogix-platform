@@ -115,6 +115,7 @@ builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IConversationCommandService, ConversationCommandService>();
 builder.Services.AddScoped<IMessageCommandService, MessageCommandService>();
 builder.Services.AddScoped<IMessageQueryService, MessageQueryService>();
+builder.Services.AddScoped<IConversationQueryService, ConversationQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>

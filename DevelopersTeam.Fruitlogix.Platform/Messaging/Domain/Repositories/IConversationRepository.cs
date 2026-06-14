@@ -8,5 +8,5 @@ public interface IConversationRepository : IBaseRepository<Conversation>
 {
     Task<bool> ExistsByOrderIdAsync(int orderId);
     Task<IEnumerable<Message>> GetMessagesByConversationIdAsync(int conversationId);
-
+    Task<IEnumerable<Conversation>> FindByUserIdAsync(int userId);
 }
