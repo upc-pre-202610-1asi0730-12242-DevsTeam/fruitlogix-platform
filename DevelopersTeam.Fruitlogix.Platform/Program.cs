@@ -12,6 +12,8 @@ using DevelopersTeam.Fruitlogix.Platform.Logistics.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Logistics.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.Internal.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.Internal.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.QueryServices;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Infrastructure.Persistence.EFC.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.CommandServices;
@@ -112,6 +114,7 @@ builder.Services.AddScoped<IAlertRuleQueryService, AlertRuleQueryService>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IConversationCommandService, ConversationCommandService>();
 builder.Services.AddScoped<IMessageCommandService, MessageCommandService>();
+builder.Services.AddScoped<IMessageQueryService, MessageQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
