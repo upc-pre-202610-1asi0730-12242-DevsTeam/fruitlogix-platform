@@ -9,7 +9,7 @@ namespace DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class ConversationsController(IConversationCommandService conversationCommandService)
+public class ConversationsController(IConversationCommandService conversationCommandService, IMessageCommandService messageCommandService)
     : ControllerBase
 {
     [HttpPost]
@@ -26,6 +26,30 @@ public class ConversationsController(IConversationCommandService conversationCom
             return StatusCode(201, result); 
         }
         catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpPost("{conversationId:int}/messages")]
+    [ProducesResponseType(typeof(MessageResource), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SendMessage(
+        int conversationId, [FromBody] SendMessageResource resource)
+    {
+        try
+        {
+            var command = MessageResourceAssembler.ToCommandFromResource(conversationId, resource);
+            var message = await messageCommandService.Handle(command);
+            var result  = MessageResourceAssembler.ToResourceFromEntity(message);
+            return StatusCode(201, result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
         }

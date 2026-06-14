@@ -1,4 +1,6 @@
 ﻿using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Commands;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Entities;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.ValueObjects;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Domain.Model;
 
 namespace DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Aggregates;
@@ -24,5 +26,15 @@ public class Conversation : IAuditableEntity
         OrderId = command.OrderId;
         ParticipantAId = command.ParticipantAId;
         ParticipantBId = command.ParticipantBId;
+    }
+    
+    private readonly List<Message> _messages = [];
+
+    public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
+    public void AddMessage(int senderId, string content)
+    {
+        var messageContent = new MessageContent(content);
+        var message = new Message(senderId, messageContent);
+        _messages.Add(message);
     }
 }
