@@ -20,4 +20,8 @@ public class ConversationRepository(AppDbContext context)
 
         return conversation?.Messages ?? Enumerable.Empty<Message>();
     }
+    public async Task<IEnumerable<Conversation>> FindByUserIdAsync(int userId) =>
+        await Context.Set<Conversation>()
+            .Where(c => c.ParticipantAId == userId || c.ParticipantBId == userId)
+            .ToListAsync();
 }
