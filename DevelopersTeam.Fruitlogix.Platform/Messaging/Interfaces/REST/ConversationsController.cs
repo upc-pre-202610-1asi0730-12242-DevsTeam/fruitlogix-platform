@@ -1,5 +1,7 @@
 ﻿using System.Net.Mime;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.CommandServices;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +11,7 @@ namespace DevelopersTeam.Fruitlogix.Platform.Messaging.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class ConversationsController(IConversationCommandService conversationCommandService, IMessageCommandService messageCommandService)
+public class ConversationsController(IConversationCommandService conversationCommandService, IMessageCommandService messageCommandService, IMessageQueryService messageQueryService)
     : ControllerBase
 {
     [HttpPost]
@@ -52,6 +54,23 @@ public class ConversationsController(IConversationCommandService conversationCom
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("{conversationId:int}/messages")]
+    [ProducesResponseType(typeof(IEnumerable<MessageResource>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)] // Agregamos estas dos líneas
+    public async Task<IActionResult> GetMessages(int conversationId)
+    {
+        try
+        {
+            var query    = new GetMessagesByConversationIdQuery(conversationId);
+            var messages = await messageQueryService.Handle(query);
+            var result   = messages.Select(MessageResourceAssembler.ToResourceFromEntity);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 }

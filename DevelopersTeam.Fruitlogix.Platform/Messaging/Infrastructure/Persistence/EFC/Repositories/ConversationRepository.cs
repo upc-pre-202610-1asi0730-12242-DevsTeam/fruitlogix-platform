@@ -1,4 +1,5 @@
 ﻿using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Aggregates;
+using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Model.Entities;
 using DevelopersTeam.Fruitlogix.Platform.Messaging.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -11,4 +12,12 @@ public class ConversationRepository(AppDbContext context)
 {
     public async Task<bool> ExistsByOrderIdAsync(int orderId) =>
         await Context.Set<Conversation>().AnyAsync(c => c.OrderId == orderId);
+    public async Task<IEnumerable<Message>> GetMessagesByConversationIdAsync(int conversationId)
+    {
+        var conversation = await Context.Set<Conversation>()
+            .Include(c => c.Messages)
+            .FirstOrDefaultAsync(c => c.Id == conversationId);
+
+        return conversation?.Messages ?? Enumerable.Empty<Message>();
+    }
 }
