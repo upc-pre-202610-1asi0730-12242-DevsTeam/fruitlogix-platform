@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="OrderNotFound" xml:space="preserve">
+    <value>Pedido no encontrado.</value>
+  </data>
+    <data name="InvalidStatusTransition" xml:space="preserve">
+    <value>Transición de estado inválida.</value>
+  </data>
+    <data name="CannotEditNonPendingOrder" xml:space="preserve">
+    <value>Solo se pueden editar pedidos en estado pendiente.</value>
+  </data>
+    <data name="ProducerAlreadyAssigned" xml:space="preserve">
+    <value>Ya se asignó un productor a este pedido.</value>
+  </data>
+    <data name="OrderAlreadyCancelled" xml:space="preserve">
+    <value>Este pedido ya fue cancelado.</value>
+  </data>
+    <data name="OrderAlreadyDelivered" xml:space="preserve">
+    <value>Este pedido ya fue entregado.</value>
+  </data>
+</root>

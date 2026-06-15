@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="OrderNotFound" xml:space="preserve">
+    <value>Order not found.</value>
+  </data>
+    <data name="InvalidStatusTransition" xml:space="preserve">
+    <value>Invalid status transition.</value>
+  </data>
+    <data name="CannotEditNonPendingOrder" xml:space="preserve">
+    <value>Only pending orders can be edited.</value>
+  </data>
+    <data name="ProducerAlreadyAssigned" xml:space="preserve">
+    <value>A producer has already been assigned to this order.</value>
+  </data>
+    <data name="OrderAlreadyCancelled" xml:space="preserve">
+    <value>This order has already been cancelled.</value>
+  </data>
+    <data name="OrderAlreadyDelivered" xml:space="preserve">
+    <value>This order has already been delivered.</value>
+  </data>
+</root>
