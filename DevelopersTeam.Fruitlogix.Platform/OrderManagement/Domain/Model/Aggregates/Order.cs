@@ -12,8 +12,12 @@ public class Order : IAuditableEntity
     public ProducerId? ProducerId { get; private set; }
     public OrderStatus Status { get; private set; }
     public DeliveryDate DeliveryDueDate { get; private set; } = null!;
-    public string FruitType { get; private set; } = null!;
-    public double TotalVolume { get; private set; }
+    
+    // --- NUEVO: La dirección que viene del frontend ---
+    public string DeliveryAddress { get; private set; } = null!; 
+    
+    // --- ELIMINADOS: FruitType y TotalVolume ya no van aquí ---
+    
     public decimal TotalAmount { get; private set; }
     public string? Notes { get; private set; }
     public string? CancellationReason { get; private set; }
@@ -29,16 +33,19 @@ public class Order : IAuditableEntity
     public Order(CreateOrderCommand command)
     {
         CommercialClientId = command.CommercialClientId;
-        ProducerId = new ProducerId(command.ProducerId);
+        
+        // ¡OJO AQUÍ! El ProducerId nace nulo porque el Cliente no lo elige.
+        ProducerId = null; 
+        
         DeliveryDueDate = new DeliveryDate(command.DeliveryDueDate);
-        FruitType = command.FruitType;
-        TotalVolume = command.TotalVolume;
+        DeliveryAddress = command.DeliveryAddress; // Guardamos la dirección
         TotalAmount = command.TotalAmount;
         Notes = command.Notes;
         Status = OrderStatus.Pending;
 
+        // Llenamos la lista de frutas
         foreach (var item in command.Items)
-            _items.Add(new OrderItem(item.FruitName, item.QuantityKg, item.UnitPrice));
+            _items.Add(new OrderItem(item.ProductId, item.ProductName, item.QuantityKg, item.UnitPrice, item.Subtotal));
     }
 
     public void AssignProducer(AssignProducerCommand command)
@@ -53,10 +60,10 @@ public class Order : IAuditableEntity
     {
         if (Status != OrderStatus.Pending)
             throw new InvalidOperationException("Only pending orders can be edited.");
-        ProducerId = new ProducerId(command.ProducerId);
+        
+        // También quitamos FruitType y TotalVolume de aquí
         DeliveryDueDate = new DeliveryDate(command.DeliveryDueDate);
-        FruitType = command.FruitType;
-        TotalVolume = command.TotalVolume;
+        DeliveryAddress = command.DeliveryAddress;
         TotalAmount = command.TotalAmount;
         Notes = command.Notes;
     }

@@ -12,17 +12,17 @@ public static class OrderResourceFromEntityAssembler
             order.ProducerId?.Value,
             order.Status.ToString(),
             order.DeliveryDueDate.Value,
-            order.FruitType,
-            order.TotalVolume,
+            order.DeliveryAddress,
             order.TotalAmount,
             order.Notes,
             order.CancellationReason,
             order.Items.Select(i => new OrderItemResource(
                 i.Id,
-                i.FruitName,
+                i.ProductId,
+                i.ProductName,
                 i.QuantityKg,
                 i.UnitPrice,
-                i.Subtotal)),
+                i.Subtotal)).ToList(),
             order.CreatedAt,
             order.UpdatedAt
         );

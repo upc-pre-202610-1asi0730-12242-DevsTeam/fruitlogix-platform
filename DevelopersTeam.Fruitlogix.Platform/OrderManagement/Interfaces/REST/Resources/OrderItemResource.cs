@@ -1,9 +1,9 @@
 ﻿namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Resources;
 
-
 public record OrderItemResource(
     int Id,
-    string FruitName,
+    int ProductId,
+    string ProductName,
     double QuantityKg,
     decimal UnitPrice,
     decimal Subtotal

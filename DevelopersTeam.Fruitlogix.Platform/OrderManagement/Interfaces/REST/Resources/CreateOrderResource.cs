@@ -2,17 +2,17 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Res
 
 public record CreateOrderResource(
     int CommercialClientId,
-    int ProducerId,
     DateOnly DeliveryDueDate,
-    string FruitType,
-    double TotalVolume,
+    string DeliveryAddress,
     decimal TotalAmount,
     string? Notes,
     List<CreateOrderItemResource> Items
 );
 
 public record CreateOrderItemResource(
-    string FruitName,
+    int ProductId,
+    string ProductName,
     double QuantityKg,
-    decimal UnitPrice
+    decimal UnitPrice,
+    decimal Subtotal
 );

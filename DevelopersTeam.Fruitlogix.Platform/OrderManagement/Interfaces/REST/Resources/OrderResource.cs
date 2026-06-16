@@ -6,12 +6,11 @@ public record OrderResource(
     int? ProducerId,
     string Status,
     DateOnly DeliveryDueDate,
-    string FruitType,
-    double TotalVolume,
+    string DeliveryAddress,
     decimal TotalAmount,
     string? Notes,
     string? CancellationReason,
-    IEnumerable<OrderItemResource> Items,
+    List<OrderItemResource> Items,
     DateTimeOffset? CreatedAt,
     DateTimeOffset? UpdatedAt
 );
