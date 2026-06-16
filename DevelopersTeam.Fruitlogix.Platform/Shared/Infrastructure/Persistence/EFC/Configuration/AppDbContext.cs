@@ -60,8 +60,9 @@ protected override void OnModelCreating(ModelBuilder builder)
     builder.Entity<Order>()
         .Property(o => o.DeliveryDueDate)
         .HasConversion(
-            v => v.Value,
-            v => new DeliveryDate(v))
+            v => v.Value.ToDateTime(TimeOnly.MinValue), // DateOnly → DateTime para MySQL
+            v => new DeliveryDate(DateOnly.FromDateTime(v))) // DateTime → DateOnly al leer
+        .HasColumnType("date")
         .IsRequired();
     builder.Entity<Order>()
         .HasMany(o => o.Items)
