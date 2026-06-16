@@ -5,16 +5,22 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Tra
 
 public static class CreateOrderCommandFromResourceAssembler
 {
-    public static CreateOrderCommand ToCommandFromResource(CreateOrderResource resource) =>
-        new(
+    public static CreateOrderCommand ToCommandFromResource(CreateOrderResource resource)
+    {
+        var items = resource.Items.Select(i => new CreateOrderItemCommand(
+            i.ProductId,
+            i.ProductName,
+            i.QuantityKg,
+            i.UnitPrice,
+            i.Subtotal)).ToList();
+
+        return new CreateOrderCommand(
             resource.CommercialClientId,
-            resource.ProducerId,
             resource.DeliveryDueDate,
-            resource.FruitType,
-            resource.TotalVolume,
+            resource.DeliveryAddress,
             resource.TotalAmount,
             resource.Notes,
-            resource.Items.Select(i =>
-                new CreateOrderItemCommand(i.FruitName, i.QuantityKg, i.UnitPrice)).ToList()
+            items
         );
+    }
 }

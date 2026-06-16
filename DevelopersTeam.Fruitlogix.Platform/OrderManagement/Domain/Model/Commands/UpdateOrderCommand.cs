@@ -2,10 +2,8 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Comman
 
 public record UpdateOrderCommand(
     int OrderId,
-    int ProducerId,
     DateOnly DeliveryDueDate,
-    string FruitType,
-    double TotalVolume,
+    string DeliveryAddress,
     decimal TotalAmount,
     string? Notes
 );

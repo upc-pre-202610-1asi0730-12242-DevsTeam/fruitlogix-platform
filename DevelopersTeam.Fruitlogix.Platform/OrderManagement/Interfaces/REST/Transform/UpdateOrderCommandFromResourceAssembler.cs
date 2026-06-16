@@ -8,10 +8,8 @@ public static class UpdateOrderCommandFromResourceAssembler
     public static UpdateOrderCommand ToCommandFromResource(int orderId, UpdateOrderResource resource) =>
         new(
             orderId,
-            resource.ProducerId,
             resource.DeliveryDueDate,
-            resource.FruitType,
-            resource.TotalVolume,
+            resource.DeliveryAddress,
             resource.TotalAmount,
             resource.Notes
         );

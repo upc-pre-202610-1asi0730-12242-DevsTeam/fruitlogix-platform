@@ -2,17 +2,17 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Comman
 
 public record CreateOrderCommand(
     int CommercialClientId,
-    int ProducerId,
     DateOnly DeliveryDueDate,
-    string FruitType,
-    double TotalVolume,
+    string DeliveryAddress,
     decimal TotalAmount,
-    string? Notes,
-    List<CreateOrderItemCommand> Items
+    string? Notes,   
+    List<CreateOrderItemCommand> Items 
 );
 
 public record CreateOrderItemCommand(
-    string FruitName,
-    double QuantityKg,
-    decimal UnitPrice
+    int ProductId,      
+    string ProductName,  
+    double QuantityKg,  
+    decimal UnitPrice,
+    decimal Subtotal
 );

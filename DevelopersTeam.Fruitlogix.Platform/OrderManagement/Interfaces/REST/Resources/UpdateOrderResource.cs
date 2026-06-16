@@ -1,10 +1,8 @@
 namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Resources;
 
 public record UpdateOrderResource(
-    int ProducerId,
     DateOnly DeliveryDueDate,
-    string FruitType,
-    double TotalVolume,
+    string DeliveryAddress,
     decimal TotalAmount,
     string? Notes
 );
