@@ -25,9 +25,12 @@ public class OrderRepository(AppDbContext context)
             .Include(o => o.Items)
             .ToListAsync();
 
-    public async Task<IEnumerable<Order>> FindByProducerIdAsync(int producerId) =>
-        await Context.Set<Order>()
-            .Where(o => o.ProducerId != null && o.ProducerId.Value == producerId)
+    public async Task<IEnumerable<Order>> FindByProducerIdAsync(int producerId)
+    {
+        var orders = await Context.Set<Order>()
             .Include(o => o.Items)
             .ToListAsync();
+    
+        return orders.Where(o => o.ProducerId != null && o.ProducerId.Value == producerId);
+    }
 }
