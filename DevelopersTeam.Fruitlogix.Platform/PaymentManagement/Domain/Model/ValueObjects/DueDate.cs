@@ -10,4 +10,12 @@ public record DueDate
             throw new ArgumentException("Due date must be in the future.");
         Value = value;
     }
+
+    // Constructor privado para EF Core (sin validación)
+    private DueDate(DateOnly value, bool skipValidation)
+    {
+        Value = value;
+    }
+
+    public static DueDate FromDatabase(DateOnly value) => new(value, true);
 }

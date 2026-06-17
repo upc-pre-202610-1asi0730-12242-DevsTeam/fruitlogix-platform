@@ -280,7 +280,10 @@ protected override void OnModelCreating(ModelBuilder builder)
 
         builder.Entity<Invoice>()
             .Property(i => i.DueDate)
-            .HasConversion(v => v.Value, v => new DueDate(v))
+            .HasConversion(
+                v => v.Value.ToDateTime(TimeOnly.MinValue),
+                v => DueDate.FromDatabase(DateOnly.FromDateTime(v)))
+            .HasColumnType("date")
             .IsRequired();
 
         builder.Entity<Invoice>().Property(i => i.Status).HasConversion<string>().IsRequired();
