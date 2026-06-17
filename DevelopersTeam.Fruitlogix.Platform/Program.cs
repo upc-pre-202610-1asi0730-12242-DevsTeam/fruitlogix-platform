@@ -45,7 +45,7 @@ using DevelopersTeam.Fruitlogix.Platform.QualityControl.Application.QueryService
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Repositories;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
-
+using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);   
 
 // ── Database ──────────────────────────────────────────────────────────────────
@@ -59,6 +59,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderCommandService, OrderCommandService>();
 builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
+// ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
         options.Conventions.Add(new KebabCaseRouteNamingConvention()))
     .AddJsonOptions(options =>
@@ -66,6 +67,8 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         options.JsonSerializerOptions.PropertyNamingPolicy = 
             System.Text.Json.JsonNamingPolicy.CamelCase;
+        // 👇 Esta línea evita que C# explote al intentar leer tus Value Objects (Enums)
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 // Profiles BC
@@ -126,14 +129,6 @@ builder.Services.AddScoped<IMessageQueryService, MessageQueryService>();
 builder.Services.AddScoped<IConversationQueryService, ConversationQueryService>();
 
 // ── Controllers ───────────────────────────────────────────────────────────────
-builder.Services.AddControllers(options =>
-        options.Conventions.Add(new KebabCaseRouteNamingConvention()))
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy =
-            System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
 
 // ── Swagger ───────────────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
@@ -160,13 +155,9 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-// ── Middleware ────────────────────────────────────────────────────────────────
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthorization();

@@ -1,3 +1,3 @@
-﻿namespace DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Model.ValueObjects;
+﻿    namespace DevelopersTeam.Fruitlogix.Platform.PaymentManagement.Domain.Model.ValueObjects;
 
-public enum InvoiceType { RECEIVABLE, PAYABLE }
+    public enum InvoiceType { RECEIVABLE, PAYABLE }
