@@ -9,5 +9,4 @@ public interface IOrderQueryService
     Task<Order?> Handle(GetOrderByIdQuery query);
     Task<IEnumerable<Order>> Handle(GetOrdersByClientIdQuery query);
     Task<IEnumerable<Order>> Handle(GetOrdersByProducerIdQuery query);
-
 }
