@@ -7,4 +7,7 @@ public interface IOrderRepository : IBaseRepository<Order>
 {
     Task<IEnumerable<Order>> FindByClientIdAsync(int clientId);
     Task<IEnumerable<Order>> FindByProducerIdAsync(int producerId);
+    
+    Task<IEnumerable<Order>> GetAllOrdersWithItemsAsync();
+    Task<Order?> GetOrderByIdWithItemsAsync(int id);
 }

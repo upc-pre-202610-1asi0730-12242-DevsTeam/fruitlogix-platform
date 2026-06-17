@@ -9,12 +9,12 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Infrastructure.Pers
 public class OrderRepository(AppDbContext context)
     : BaseRepository<Order>(context), IOrderRepository
 {
-    public new async Task<IEnumerable<Order>> ListAsync() =>
+    public async Task<IEnumerable<Order>> GetAllOrdersWithItemsAsync() =>
         await Context.Set<Order>()
             .Include(o => o.Items)
             .ToListAsync();
 
-    public new async Task<Order?> FindByIdAsync(int id) =>
+    public async Task<Order?> GetOrderByIdWithItemsAsync(int id) =>
         await Context.Set<Order>()
             .Include(o => o.Items)
             .FirstOrDefaultAsync(o => o.Id == id);

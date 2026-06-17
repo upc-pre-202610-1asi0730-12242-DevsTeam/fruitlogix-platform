@@ -8,10 +8,10 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.Interna
 public class OrderQueryService(IOrderRepository orderRepository) : IOrderQueryService
 {
     public async Task<IEnumerable<Order>> Handle(GetAllOrdersQuery query) =>
-        await orderRepository.ListAsync();
+        await orderRepository.GetAllOrdersWithItemsAsync();
 
     public async Task<Order?> Handle(GetOrderByIdQuery query) =>
-        await orderRepository.FindByIdAsync(query.OrderId);
+        await orderRepository.GetOrderByIdWithItemsAsync(query.OrderId);
 
     public async Task<IEnumerable<Order>> Handle(GetOrdersByClientIdQuery query) =>
         await orderRepository.FindByClientIdAsync(query.CommercialClientId);
