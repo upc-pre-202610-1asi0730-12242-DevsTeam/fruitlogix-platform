@@ -6,5 +6,5 @@ namespace DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Tra
 public static class AssignProducerCommandFromResourceAssembler
 {
     public static AssignProducerCommand ToCommandFromResource(int orderId, AssignProducerResource resource) =>
-        new(orderId, resource.ProducerId);
+        new(orderId, resource.ProducerId!.Value);
 }

@@ -65,11 +65,13 @@ public class OrdersController(
     }
 
     [HttpPatch("{id:int}/assign-producer")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
     public async Task<IActionResult> AssignProducer(int id, [FromBody] AssignProducerResource resource)
     {
-        var command = AssignProducerCommandFromResourceAssembler.ToCommandFromResource(id, resource);
+        if (resource?.ProducerId == null)
+            return BadRequest(new { message = "ProducerId is required." });
+    
+        var command = AssignProducerCommandFromResourceAssembler
+            .ToCommandFromResource(id, resource);
         var order = await orderCommandService.Handle(command);
         if (order is null) return NotFound();
         return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
@@ -100,5 +102,15 @@ public class OrdersController(
 
         // Aquí sí usamos el Assembler viejo porque vamos de Entity a Resource para mostrar el resultado
         return Ok(OrderResourceFromEntityAssembler.ToResourceFromEntity(order));
+    }
+    
+    [HttpGet("producer/{producerId:int}")]
+    public async Task<IActionResult> GetByProducerId(int producerId)
+    {
+        var orders = await orderQueryService.Handle(
+            new GetOrdersByProducerIdQuery(producerId));
+        var resources = orders.Select(
+            OrderResourceFromEntityAssembler.ToResourceFromEntity);
+        return Ok(resources);
     }
 }

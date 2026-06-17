@@ -15,4 +15,7 @@ public class OrderQueryService(IOrderRepository orderRepository) : IOrderQuerySe
 
     public async Task<IEnumerable<Order>> Handle(GetOrdersByClientIdQuery query) =>
         await orderRepository.FindByClientIdAsync(query.CommercialClientId);
+    
+    public async Task<IEnumerable<Order>> Handle(GetOrdersByProducerIdQuery query) =>
+        await orderRepository.FindByProducerIdAsync(query.ProducerId);
 }
