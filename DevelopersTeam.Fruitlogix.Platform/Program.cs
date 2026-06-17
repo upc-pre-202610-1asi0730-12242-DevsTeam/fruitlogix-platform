@@ -59,6 +59,14 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderCommandService, OrderCommandService>();
 builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
+builder.Services.AddControllers(options =>
+        options.Conventions.Add(new KebabCaseRouteNamingConvention()))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = 
+            System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 
 // Profiles BC
 builder.Services.AddScoped<IProducerRepository, ProducerRepository>();
@@ -119,7 +127,13 @@ builder.Services.AddScoped<IConversationQueryService, ConversationQueryService>(
 
 // ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers(options =>
-    options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+        options.Conventions.Add(new KebabCaseRouteNamingConvention()))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy =
+            System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 
 // ── Swagger ───────────────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
