@@ -415,11 +415,6 @@ protected override void OnModelCreating(ModelBuilder builder)
                 .IsRequired();
         });
         
-        builder.Entity<Invoice>().OwnsOne(i => i.DueDate, dueDate =>
-        {
-            dueDate.Property(d => d.Value).HasColumnName("due_date");
-        });
-        
         builder.UseSnakeCaseNamingConvention();
     }
     
