@@ -10,4 +10,12 @@ public record DeliveryDate
             throw new ArgumentException("Delivery date must be in the future.");
         Value = value;
     }
+
+    // Para EF Core — sin validación
+    private DeliveryDate(DateOnly value, bool skipValidation)
+    {
+        Value = value;
+    }
+
+    public static DeliveryDate FromDatabase(DateOnly value) => new(value, true);
 }
