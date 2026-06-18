@@ -50,10 +50,11 @@ public class Order : IAuditableEntity
 
     public void AssignProducer(AssignProducerCommand command)
     {
-        if (Status != OrderStatus.Pending)
-            throw new InvalidOperationException("Producer can only be assigned to pending orders.");
+        if (Status != OrderStatus.Pending && Status != OrderStatus.InPreparation)
+            throw new InvalidOperationException("Producer can only be assigned to pending or in-preparation orders.");
         ProducerId = new ProducerId(command.ProducerId);
-        Status = OrderStatus.InPreparation;
+        if (Status == OrderStatus.Pending)
+            Status = OrderStatus.InPreparation;
     }
 
     public void UpdateDetails(UpdateOrderCommand command)
