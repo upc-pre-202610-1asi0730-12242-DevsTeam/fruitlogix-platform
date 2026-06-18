@@ -146,11 +146,12 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 "http://localhost:5173",   // Vue dev server
                 "http://localhost:4173",   // Vue preview
-                "https://fruitlogix.vercel.app") // Producción
+                "https://fruitlogix.vercel.app", // Producción anterior
+                "https://fruitlogixweb.web.app"  // <--- ¡TU NUEVO LINK DE FIREBASE AQUÍ!
+            ) 
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
-
 var app = builder.Build();
 
 // ── Migrations automáticas ────────────────────────────────────────────────────
@@ -168,6 +169,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
+app.UseCors("AllowAllPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
