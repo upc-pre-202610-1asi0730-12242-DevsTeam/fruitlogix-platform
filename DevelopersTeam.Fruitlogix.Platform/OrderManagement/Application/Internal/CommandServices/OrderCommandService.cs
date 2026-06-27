@@ -59,4 +59,14 @@ public class OrderCommandService(
 
         return order;
     }
+    public async Task Handle(DeleteOrderCommand command)
+    {
+        var order = await orderRepository.FindByIdAsync(command.OrderId);
+    
+        if (order == null)
+            throw new KeyNotFoundException("Order not found.");
+
+        orderRepository.Remove(order);
+        await unitOfWork.CompleteAsync();
+    }
 }

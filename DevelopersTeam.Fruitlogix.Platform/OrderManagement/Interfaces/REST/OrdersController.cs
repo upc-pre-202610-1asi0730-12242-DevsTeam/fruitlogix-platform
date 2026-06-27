@@ -1,5 +1,6 @@
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.CommandServices;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Application.QueryServices;
+using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Commands;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Domain.Model.Queries;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Resources;
 using DevelopersTeam.Fruitlogix.Platform.OrderManagement.Interfaces.REST.Transform;
@@ -112,5 +113,26 @@ public class OrdersController(
         var resources = orders.Select(
             OrderResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
+    }
+    /// <summary>
+    ///     Deletes an order permanently.
+    /// </summary>
+    /// <param name="orderId">The unique identifier of the order to delete.</param>
+    /// <returns>204 No Content on success.</returns>
+    [HttpDelete("{orderId:int}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> DeleteOrder(int orderId)
+    {
+        try
+        {
+            var command = new DeleteOrderCommand(orderId);
+            await orderCommandService.Handle(command);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }
