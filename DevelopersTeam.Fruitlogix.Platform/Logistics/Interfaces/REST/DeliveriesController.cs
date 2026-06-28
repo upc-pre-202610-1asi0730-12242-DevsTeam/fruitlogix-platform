@@ -15,15 +15,17 @@ namespace DevelopersTeam.Fruitlogix.Platform.Logistics.Interfaces.REST;
 public class DeliveriesController : ControllerBase
 {
     private readonly IDeliveryCommandService _deliveryCommandService;
+    private readonly IDeliveryQueryService   _deliveryQueryService;
 
-    public DeliveriesController(IDeliveryCommandService deliveryCommandService)
+    public DeliveriesController(
+        IDeliveryCommandService deliveryCommandService,
+        IDeliveryQueryService deliveryQueryService)
     {
         _deliveryCommandService = deliveryCommandService;
+        _deliveryQueryService   = deliveryQueryService;
     }
 
     /// <summary>Creates a new delivery.</summary>
-    /// <param name="resource">Delivery creation payload.</param>
-    /// <returns>The created delivery.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(DeliveryResource), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,20 +36,8 @@ public class DeliveriesController : ControllerBase
         var result   = DeliveryResourceFromEntityAssembler.ToResourceFromEntity(delivery);
         return CreatedAtAction(nameof(CreateDelivery), new { id = result.Id }, result);
     }
-    
-    
-    private readonly IDeliveryQueryService _deliveryQueryService;
 
-    public DeliveriesController(
-        IDeliveryCommandService deliveryCommandService,
-        IDeliveryQueryService deliveryQueryService)
-    {
-        _deliveryCommandService = deliveryCommandService;
-        _deliveryQueryService   = deliveryQueryService;
-    }
-    
     /// <summary>Returns all deliveries.</summary>
-    /// <returns>List of all deliveries.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<DeliveryResource>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllDeliveries()
@@ -58,7 +48,7 @@ public class DeliveriesController : ControllerBase
             DeliveryResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(result);
     }
-    
+
     /// <summary>Starts the dispatch of a delivery.</summary>
     [HttpPost("{id:int}/start-dispatch")]
     [ProducesResponseType(typeof(DeliveryResource), StatusCodes.Status200OK)]
