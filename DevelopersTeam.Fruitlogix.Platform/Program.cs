@@ -210,8 +210,10 @@ app.UseSwaggerUI();
 app.UseCors("AllowFrontend");
 
 // 🌟 MIDDLEWARE DE AUTENTICACIÓN IAM DEL PROFESOR
-app.UseRequestAuthorization();
-
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/swagger"), appBuilder =>
+{
+    appBuilder.UseRequestAuthorization();
+});
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
