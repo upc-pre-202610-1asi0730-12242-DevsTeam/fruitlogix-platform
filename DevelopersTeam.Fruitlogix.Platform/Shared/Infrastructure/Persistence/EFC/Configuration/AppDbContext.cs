@@ -14,6 +14,7 @@ using DevelopersTeam.Fruitlogix.Platform.Profiles.Domain.Model.Aggregates;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using DevelopersTeam.Fruitlogix.Platform.QualityControl.Domain.Model.Entities;
+using DevelopersTeam.Fruitlogix.Platform.Iam.Domain.Model.Aggregates;
 
 namespace DevelopersTeam.Fruitlogix.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -25,75 +26,76 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnConfiguring(builder);
     }
 
-protected override void OnModelCreating(ModelBuilder builder)
-{
-    base.OnModelCreating(builder);
+    // 🌟 AQUÍ ESTÁ EL DBSET PARA LOS USUARIOS DEL IAM
+    public DbSet<User> Users { get; set; }
 
-    // Order Management
-    builder.Entity<Order>().HasKey(o => o.Id);
-    builder.Entity<Order>().Property(o => o.Id)
-        .IsRequired().ValueGeneratedOnAdd();
-    builder.Entity<Order>().Property(o => o.CommercialClientId)
-        .IsRequired();
-    builder.Entity<Order>().Property(o => o.Status)
-        .HasConversion<string>()
-        .IsRequired();
-        
-    builder.Entity<Order>().Property(o => o.DeliveryAddress)
-        .HasMaxLength(255)
-        .IsRequired();
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
 
+        // Order Management
+        builder.Entity<Order>().HasKey(o => o.Id);
+        builder.Entity<Order>().Property(o => o.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Order>().Property(o => o.CommercialClientId)
+            .IsRequired();
+        builder.Entity<Order>().Property(o => o.Status)
+            .HasConversion<string>()
+            .IsRequired();
+            
+        builder.Entity<Order>().Property(o => o.DeliveryAddress)
+            .HasMaxLength(255)
+            .IsRequired();
 
-    builder.Entity<Order>().Property(o => o.TotalAmount)
-        .HasColumnType("decimal(12,2)")
-        .IsRequired();
-    builder.Entity<Order>().Property(o => o.Notes)
-        .IsRequired(false);
-    builder.Entity<Order>().Property(o => o.CancellationReason)
-        .IsRequired(false);
-    builder.Entity<Order>()
-        .Property(o => o.ProducerId)
-        .HasConversion(
-            v => v == null ? (int?)null : v.Value,
-            v => v == null ? null : new ProducerId(v.Value))
-        .IsRequired(false);
-    builder.Entity<Order>()
-        .Property(o => o.DeliveryDueDate)
-        .HasConversion(
-            v => v.Value.ToDateTime(TimeOnly.MinValue),
-            v => DeliveryDate.FromDatabase(DateOnly.FromDateTime(v)))
-        .HasColumnType("date")
-        .IsRequired();
-    builder.Entity<Order>()
-        .HasMany(o => o.Items)
-        .WithOne()
-        .HasForeignKey("OrderId")
-        .OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<Order>().Property(o => o.TotalAmount)
+            .HasColumnType("decimal(12,2)")
+            .IsRequired();
+        builder.Entity<Order>().Property(o => o.Notes)
+            .IsRequired(false);
+        builder.Entity<Order>().Property(o => o.CancellationReason)
+            .IsRequired(false);
+        builder.Entity<Order>()
+            .Property(o => o.ProducerId)
+            .HasConversion(
+                v => v == null ? (int?)null : v.Value,
+                v => v == null ? null : new ProducerId(v.Value))
+            .IsRequired(false);
+        builder.Entity<Order>()
+            .Property(o => o.DeliveryDueDate)
+            .HasConversion(
+                v => v.Value.ToDateTime(TimeOnly.MinValue),
+                v => DeliveryDate.FromDatabase(DateOnly.FromDateTime(v)))
+            .HasColumnType("date")
+            .IsRequired();
+        builder.Entity<Order>()
+            .HasMany(o => o.Items)
+            .WithOne()
+            .HasForeignKey("OrderId")
+            .OnDelete(DeleteBehavior.Cascade);
 
-    // Order Items (CONFIGURACIÓN DE LOS PRODUCTOS)
-    builder.Entity<OrderItem>().HasKey(i => i.Id);
-    builder.Entity<OrderItem>().Property(i => i.Id)
-        .IsRequired().ValueGeneratedOnAdd();
-        
-    builder.Entity<OrderItem>().Property(i => i.ProductId)
-        .IsRequired();
-        
-    builder.Entity<OrderItem>().Property(i => i.ProductName)
-        .HasMaxLength(100)
-        .IsRequired();
-        
-    builder.Entity<OrderItem>().Property(i => i.QuantityKg)
-        .IsRequired();
-    builder.Entity<OrderItem>().Property(i => i.UnitPrice)
-        .HasColumnType("decimal(10,2)")
-        .IsRequired();
-        
-    builder.Entity<OrderItem>().Property(i => i.Subtotal)
-        .HasColumnType("decimal(10,2)")
-        .IsRequired();
-        
-        //Profiles
-
+        // Order Items
+        builder.Entity<OrderItem>().HasKey(i => i.Id);
+        builder.Entity<OrderItem>().Property(i => i.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+            
+        builder.Entity<OrderItem>().Property(i => i.ProductId)
+            .IsRequired();
+            
+        builder.Entity<OrderItem>().Property(i => i.ProductName)
+            .HasMaxLength(100)
+            .IsRequired();
+            
+        builder.Entity<OrderItem>().Property(i => i.QuantityKg)
+            .IsRequired();
+        builder.Entity<OrderItem>().Property(i => i.UnitPrice)
+            .HasColumnType("decimal(10,2)")
+            .IsRequired();
+            
+        builder.Entity<OrderItem>().Property(i => i.Subtotal)
+            .HasColumnType("decimal(10,2)")
+            .IsRequired();
+            
+        // Profiles
         builder.Entity<Producer>().HasKey(p => p.Id);
         builder.Entity<Producer>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
 
@@ -128,7 +130,6 @@ protected override void OnModelCreating(ModelBuilder builder)
             vo.WithOwner().HasForeignKey("Id");
         });
         
-
         builder.Entity<Producer>().OwnsOne(p => p.ProductionInfo, vo =>
         {
             vo.Property(pi => pi.Crop).HasColumnName("crop").IsRequired();
@@ -137,6 +138,7 @@ protected override void OnModelCreating(ModelBuilder builder)
             vo.WithOwner().HasForeignKey("Id");
         });
 
+        // Quality Control
         builder.Entity<HarvestBatch>(entity =>
         {
             entity.HasKey(b => b.Id);
@@ -146,7 +148,7 @@ protected override void OnModelCreating(ModelBuilder builder)
             entity.Property(b => b.QuantityKg).IsRequired();
             entity.Property(b => b.HarvestDate).IsRequired();
             entity.Property(b => b.Status)
-                .HasConversion<string>() // guarda "Pending", "Approved", etc.
+                .HasConversion<string>() 
                 .IsRequired();
         }); 
         
@@ -159,19 +161,19 @@ protected override void OnModelCreating(ModelBuilder builder)
                 .WithOne()
                 .HasForeignKey<VisualInspection>(v => v.QualityInspectionId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_quality_inspections_visual"); // Nombre corto y seguro
+                .HasConstraintName("fk_quality_inspections_visual"); 
 
             entity.HasOne(q => q.TechnicalParameters)
                 .WithOne()
                 .HasForeignKey<TechnicalParameters>(t => t.QualityInspectionId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_quality_inspections_technical"); // Nombre corto y seguro
+                .HasConstraintName("fk_quality_inspections_technical"); 
     
             entity.HasOne(q => q.PreparationChecklist)
                 .WithOne()
                 .HasForeignKey<PreparationChecklist>(c => c.QualityInspectionId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_quality_inspections_preparation"); // Nombre corto y seguro
+                .HasConstraintName("fk_quality_inspections_preparation"); 
         });
 
         builder.Entity<VisualInspection>(entity =>
@@ -210,6 +212,7 @@ protected override void OnModelCreating(ModelBuilder builder)
 
             entity.Property(i => i.ResolvedAt);
         });
+
         // Delivery
         builder.Entity<Delivery>().HasKey(d => d.Id);
         builder.Entity<Delivery>().Property(d => d.Id).IsRequired().ValueGeneratedOnAdd();
@@ -218,7 +221,6 @@ protected override void OnModelCreating(ModelBuilder builder)
         builder.Entity<Delivery>().Property(d => d.CurrentStatus)
             .HasConversion<string>().IsRequired();
 
-// Value Object: DriverInfo
         builder.Entity<Delivery>().OwnsOne(d => d.Driver, nav =>
         {
             nav.Property(x => x.Name).HasColumnName("driver_name").IsRequired();
@@ -226,7 +228,6 @@ protected override void OnModelCreating(ModelBuilder builder)
             nav.WithOwner().HasForeignKey("Id"); 
         });
 
-// Value Object: VehicleInfo
         builder.Entity<Delivery>().OwnsOne(d => d.Vehicle, nav =>
         {
             nav.Property(x => x.Plate).HasColumnName("vehicle_plate").IsRequired();
@@ -234,7 +235,6 @@ protected override void OnModelCreating(ModelBuilder builder)
             nav.WithOwner().HasForeignKey("Id"); 
         });
 
-// Value Object: RouteInfo
         builder.Entity<Delivery>().OwnsOne(d => d.Route, nav =>
         {
             nav.Property(x => x.Origin).HasColumnName("route_origin").IsRequired();
@@ -266,6 +266,7 @@ protected override void OnModelCreating(ModelBuilder builder)
         builder.Entity<Alert>().Property(a => a.Message).IsRequired();
         builder.Entity<Alert>().Property(a => a.IsResolved).IsRequired();
         
+        // Payments
         builder.Entity<Invoice>().HasKey(i => i.Id);
         builder.Entity<Invoice>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Invoice>().Property(i => i.ClientId).IsRequired();
@@ -315,8 +316,7 @@ protected override void OnModelCreating(ModelBuilder builder)
         builder.Entity<PaymentTransaction>().Property(t => t.Gateway).HasConversion<string>().IsRequired();
         builder.Entity<PaymentTransaction>().Property(t => t.Status).HasConversion<string>().IsRequired();
         
-        // IotInfrastructure
-
+        // IoTInfrastructure
         builder.Entity<IoTDevice>().HasKey(d => d.Id);
         builder.Entity<IoTDevice>().Property(d => d.Id).IsRequired().ValueGeneratedOnAdd();
 
@@ -384,8 +384,7 @@ protected override void OnModelCreating(ModelBuilder builder)
             .Property(r => r.IsActive)
             .IsRequired();
         
-        //Messaging
-        
+        // Messaging
         builder.Entity<Conversation>().HasKey(c => c.Id);
         builder.Entity<Conversation>().Property(c => c.Id)
             .IsRequired().ValueGeneratedOnAdd();
@@ -395,7 +394,7 @@ protected override void OnModelCreating(ModelBuilder builder)
             .IsRequired();
         builder.Entity<Conversation>().Property(c => c.ParticipantBId)
             .IsRequired();
-        // Delta AppDbContext.cs
+
         builder.Entity<Conversation>()
             .HasMany(c => c.Messages)
             .WithOne()
@@ -417,8 +416,13 @@ protected override void OnModelCreating(ModelBuilder builder)
                 .HasColumnName("content")
                 .IsRequired();
         });
+
+        // -- IAM CONFIGURATION --
+        builder.Entity<User>().HasKey(u => u.Id);
+        builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<User>().Property(u => u.Username).IsRequired().HasMaxLength(50);
+        builder.Entity<User>().Property(u => u.PasswordHash).IsRequired();
         
         builder.UseSnakeCaseNamingConvention();
     }
-    
 }
